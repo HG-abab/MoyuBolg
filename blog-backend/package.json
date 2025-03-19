@@ -26,6 +26,7 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/mapped-types": "*",
+    "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/serve-static": "^5.0.1",
     "@nestjs/typeorm": "^11.0.0",
@@ -36,6 +37,9 @@
     "marked": "^15.0.7",
     "mysql2": "^3.12.0",
     "openai": "^4.85.4",
+    "passport": "^0.7.0",
+    "passport-gitee": "^0.0.1",
+    "passport-github2": "^0.1.12",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20"

@@ -11,6 +11,16 @@ export class User {
   @Column()
   email: string
 
-  @Column()
+  @Column({ select: false })
   password: string
+
+  // 第三方的id 可以为空
+  @Column({ nullable: true })
+  providerId: string
+
+  @Column({ nullable: true })
+  provider: string
+
+  @Column({ nullable: true })
+  avatar: string
 }

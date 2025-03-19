@@ -6,8 +6,9 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from '../users/entities/user.entity'
 import jwtConfig from '../../jwt.config'
-import { SignInDto, SignUpDto } from './dto/auth.dto'
+import { SignInDto, SignUpDto, SocialLoginDto } from './dto/auth.dto'
 import { HashingService } from './hashing.service'
+
 
 @Injectable()
 export class AuthService {
@@ -21,17 +22,25 @@ export class AuthService {
   ) { }
 
   async signUp(signUpDto: SignUpDto) {
-    const { name, password } = signUpDto
+    const { name, password, email } = signUpDto
     const existingUser = await this.userRepository.findOne({ where: [{ name }] })
-    if (existingUser)
-      throw new UnauthorizedException('User already exists')
+    if (existingUser) throw new UnauthorizedException('用户名已存在')
+
+    // 一个邮箱只能注册一个账号
+    const existingEmail = await this.userRepository.findOne({ where: [{ email }] })
+    if (existingEmail) throw new UnauthorizedException('邮箱已存在')
 
     const hashedPassword = await this.hashingService.hash(password)
     const user = this.userRepository.create({
       ...signUpDto,
       password: hashedPassword,
     })
-    return this.userRepository.save(user)
+    await this.userRepository.save(user)
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    }
   }
 
   async signIn(signInDto: SignInDto) {
@@ -65,5 +74,32 @@ export class AuthService {
       },
       token
     }
+  }
+  async socialLogin(socialLoginDto: SocialLoginDto) {
+    const { provider, providerId, name, email, avatar } = socialLoginDto;
+
+    // 查找是否已有该用户
+    let user = await this.userRepository.findOne({ where: { providerId, provider } });
+
+    // 如果用户不存在，则创建新用户
+    if (!user) {
+      user = this.userRepository.create({
+        name,
+        email,
+        avatar,
+        provider,
+        providerId,
+      });
+      await this.userRepository.save(user);
+    }
+
+    // 生成 JWT 令牌
+    const payload = { sub: user.id, email: user.email, name: user.name };
+    const token = this.jwtService.sign(payload, {
+      secret: this.jwtConfiguration.secret,
+      expiresIn: '7d',
+    });
+
+    return token;
   }
 }

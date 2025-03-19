@@ -8,6 +8,8 @@ import jwtConfig from '../../jwt.config'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { HashingService } from './hashing.service';
+import { GiteeStrategy } from './strategies/gitee.strategy'
+import { GithubStrategy } from './strategies/github.strategy'
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { HashingService } from './hashing.service';
   providers: [
     AuthService,
     HashingService,
+    GiteeStrategy,
+    GithubStrategy,
   ],
 })
 export class AuthModule { }
