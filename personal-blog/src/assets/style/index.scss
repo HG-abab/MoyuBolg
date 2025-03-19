@@ -1,0 +1,160 @@
+@font-face {
+  font-family: 'Share Tech Mono';
+  src: url('../woff/Share-TechMono-1.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: "阿里妈妈方圆体 VF Regular";
+  src: url('../woff/AlimamaFangYuanTiVF-Thin.ttf') format('truetype');
+  font-display: swap;
+}
+*{
+  margin: 0;
+  padding: 0;
+}
+
+
+body{
+  line-height: 1;
+  font-family: "阿里妈妈方圆体 VF Regular", sans-serif ;
+}
+
+a{
+  text-decoration: none;
+}
+
+ul,li{
+  list-style: none;
+}
+
+img{
+  display: block;
+}
+
+input{
+  outline: none;
+}
+
+.clearfix::after{
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.fl{
+  float: left;
+}
+
+
+// 亮色模式下的主题色
+:root {
+  --mao-hearder-color: #000;
+  --mao-background-color: #f0f8ff;
+  // 登录提示
+  --mao-size-button :#ffffff;
+  // 首页下拉内容背景
+  --mao-bg-content: #ffffff;
+  // 分类列表背景
+  --mao-bg-category: linear-gradient(135deg, #f54ea2, #ff7676);
+  // 首页波浪
+  --mao-bg-wave01: rgba(240, 248, 255,0.7);
+  --mao-bg-wave02: rgba(240, 248, 255,0.5);
+  --mao-bg-wave03: rgba(240, 248, 255,0.3);
+  --mao-bg-wave04: rgba(240, 248, 255,1);
+  // footer
+  --mao-bg-footer: linear-gradient(135deg,#958d93,#8ab9e6);
+  // 亮色滚动条
+  --scroll-bar-color: linear-gradient(135deg,#253937,#8793da);
+  // 边框
+  --el-border-color:#dcdfe6;
+  // 文章背景
+  --bg--article: rgb(240, 248, 255);
+  // 目录高亮
+  --el-color-primary-light-5: rgba(236, 245, 255)
+  // 目录字体颜色
+  --el-color-primary-light-4: #000000;
+  --el-color-primary-light-9: #000000;
+
+  // 分类外壳线
+  --el-color-danger-light-7: rgb(252 211 211);
+  --el-color-danger-light-9: rgb(254,240.3,240.3);
+  --el-color-danger: #f56c6c;
+
+  --a--color: #909399;
+
+  --mao-bg-message:#f5f5f5; // 消息背景
+  --mao-bg-comment: #f2f2f3; // 评论背景
+
+  // 相册导航颜色
+  --mao-bg-album: #333334;
+  --mao-album-color: #7b8cd4;
+  --mao-item-bg: #2a2a2a;
+  --mao-camera-bg:#ffffff;
+}
+
+// 暗色模式下的主题色
+html.dark {
+  --mao-hearder-color: #ffffff;
+  --mao-background-color: #424242;
+  --mao-size-button :#141414;
+  // 首页下拉内容背景
+  --mao-bg-content: #141414;
+  --mao-bg-category: linear-gradient(135deg,#000c40,#607d8b);
+  --mao-bg-wave01: rgba(70, 70, 70, 0.7);
+  --mao-bg-wave02: rgba(70, 70, 70, 0.5);
+  --mao-bg-wave03: rgba(70, 70, 70, 0.3);
+  --mao-bg-wave04: rgba(70, 70, 70, 1);
+  --mao-bg-footer: linear-gradient(135deg,#000e0e,#608a8b);
+  --mao-shadow: 0 2px 12px 0 rgba(255, 255, 255, 0.1);
+  // 暗色滚动条
+  --scroll-bar-color: linear-gradient(135deg,#43cbff,#9708cc);
+  --el-border-color:#dcdfe6;
+  // 文章背景
+  --bg--article: rgb(66, 66, 66);
+
+  --el-color-primary-light-5: rgba(24, 34, 44)
+
+  // 分类外壳线
+  --el-color-danger-light-7: rgb(252 211 211);
+  --el-color-danger-light-9: rgb(42.5,28.8,28.8);
+  --el-color-danger: #f56c6c;
+  
+
+  --a--color: #86898e;
+
+  --mao-bg-message:#212121; // 消息背景
+  --mao-bg-comment: #a8a8b7; // 评论背景
+
+  // 相册导航颜色
+  --mao-bg-album: #252525;
+  --mao-album-color: #ffffffe6;
+  --mao-item-bg:#282828;
+  --mao-camera-bg:#1f1f1f;
+}
+
+// 重写浏览器滚动条
+
+::-webkit-scrollbar-track
+{
+  background-color: transparent;
+}
+
+::-webkit-scrollbar
+{
+  width: 4px;
+  height: 6px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb
+{
+  border-radius: 10px;
+  background: var(--scroll-bar-color);
+}
+
+body{
+  @media screen and (max-width: 910px) {
+    overflow-x: hidden; /* 隐藏水平滚动条 */
+  }
+}
+
