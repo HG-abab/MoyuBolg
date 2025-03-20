@@ -77,6 +77,23 @@ const routes = [
     name: 'article',
     component: () => import('../view/Articles/index.vue'),
   },
+  {
+    path: '/auth', 
+    name: 'LoginCallback',
+    component: () => import('../view/AuthCallback/index.vue')
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('../components/LoginForm/index.vue'),
+  },
+  {
+    // 密码重置页面
+    path: '/reset',
+    name: 'reset',
+    component: () => import('../view/RequestPassword/index.vue'),
+    
+  },
   // 重定向
   {
     path: '/:pathMatch(.*)*',

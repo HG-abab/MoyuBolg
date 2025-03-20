@@ -10,6 +10,10 @@ export class HashingService {
   }
 
   compare(data: string | Buffer, encrypted: string): Promise<boolean> {
+    if (!data || !encrypted) {
+      console.error('compare() received empty data:', { data, encrypted });
+      return Promise.resolve(false);
+    }
     return compare(data, encrypted)
   }
 }

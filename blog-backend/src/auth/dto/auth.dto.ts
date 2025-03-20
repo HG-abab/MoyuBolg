@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import {  IsNotEmpty, IsString } from 'class-validator';
 // 注册接口
 export class SignUpDto {
   @IsString()
@@ -39,4 +39,47 @@ export class SocialLoginDto {
   name: string;
   email: string;
   avatar: string;
+}
+
+
+export interface GithubProfile {
+  _json: {
+    id: string;
+    login: string;
+    avatar_url?: string;
+  };
+  emails?: { value: string }[];
+}
+
+export interface GiteeProfile {
+  id: string;
+  login: string;
+  email?: string;
+  avatar_url?: string;
+}
+
+export class ResetPasswordDto {
+  @IsString()
+  @IsNotEmpty()
+  newPassword: string;
+}
+
+export interface JwtPayload {
+  sub: number;  // 用户 ID
+  iat?: number; // 可选的：签发时间
+  exp?: number; // 可选的：过期时间
+}
+
+
+export class resetPasswordDto {
+  @IsString()
+  @IsNotEmpty()
+  email: string
+}
+
+// token 密码
+export class TokenPasswordDto {
+  @IsString()
+  @IsNotEmpty()
+  token: string
 }

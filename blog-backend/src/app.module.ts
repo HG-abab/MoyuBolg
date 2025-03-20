@@ -17,6 +17,7 @@ import { PhotoModule } from './photo/photo.module';
 import { AiModule } from './ai/ai.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -53,7 +54,9 @@ import { UsersModule } from './users/users.module';
     AiModule,
     AuthModule,
     UsersModule,
+    MailModule,
   ],
   controllers: [],
+  providers: [],
 })
 export class AppModule { }

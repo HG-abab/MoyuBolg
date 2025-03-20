@@ -11,6 +11,9 @@ import Mobile from './Mobilenavigation/index.vue'
 import LoginForm from '../LoginForm/index.vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { useUserStore } from '@/stores/User'
+
+const userStore = useUserStore()
 
 const router = useRouter()
 const dialogVisible = ref(false)
@@ -30,6 +33,11 @@ const userInfo = ref({
 onMounted(async () => {
   customElements.define("toggle-button", DayNightToggleButton);
   checkLoginStatus();
+  if (userStore.token) {
+    isLoggedIn.value = true
+    userInfo.value.username = userStore.username
+    userInfo.value.avatar = userStore.useravatar
+  }
 })
 
 // 检查登录状态
@@ -108,6 +116,10 @@ const handleWheelEvent = (event) => {
   }
 };
 
+const loginDialogVisible = () => {
+  router.push('/login')
+}
+
 onMounted(() => {
   window.addEventListener('wheel', handleWheelEvent);
 });
@@ -132,20 +144,6 @@ onUnmounted(() => {
       <navSearch @isShowSearch="dialogVisible = false" />
     </el-dialog>
   </div>
-
-  <!-- 登录对话框 -->
-  <el-dialog v-model="loginVisible" :show-close="false" :close-on-click-modal="false" :lock-scroll="true"
-             class="login-dialog">
-    <template #header>
-      <div style="display: flex;justify-content: space-between;align-items: center;">
-        <span style="font-size: 1.3rem; font-weight: 600; margin-left: 6px">登录</span>
-        <el-button :icon="Close" style="background: none;font-size: 1.4rem;width: 30px;border: none"
-                   @click="loginVisible = false" />
-      </div>
-    </template>
-    <login-form @login-success="handleLoginSuccess" @close="loginVisible = false" />
-  </el-dialog>
-
   <transition name="fade">
     <div class="navigation" v-if="isHidden">
       <div class="left">
@@ -235,7 +233,7 @@ onUnmounted(() => {
           </template>
           <template v-else>
             <!-- 未登录状态：显示登录按钮 -->
-            <el-button type="primary" size="small" @click="loginVisible = true" class="login-btn">
+            <el-button @click="loginDialogVisible" type="primary" size="small" class="login-btn">
               登录
             </el-button>
           </template>

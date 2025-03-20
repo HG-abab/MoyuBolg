@@ -11,7 +11,7 @@ export class User {
   @Column()
   email: string
 
-  @Column({ select: false })
+  @Column({ nullable: true })
   password: string
 
   // 第三方的id 可以为空
@@ -23,4 +23,12 @@ export class User {
 
   @Column({ nullable: true })
   avatar: string
+
+  // 新增字段：存储重置令牌
+  @Column({ nullable: true })
+  resetToken: string;
+
+  // 新增字段：存储令牌过期时间
+  @Column({ type: 'timestamp', nullable: true })
+  resetTokenExpires: Date;
 }

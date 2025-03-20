@@ -1,7 +1,7 @@
 // src/auth/auth.controller.ts
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service'
-import { SignInDto, SignUpDto, SocialLoginDto } from './dto/auth.dto'
+import { ResetPasswordDto, resetPasswordDto, SignInDto, SignUpDto, SocialLoginDto } from './dto/auth.dto'
 import { AuthGuard } from '@nestjs/passport'
 import { Request, Response } from 'express'
 
@@ -35,16 +35,27 @@ export class AuthController {
   @Get('github/callback')
   @UseGuards(AuthGuard('github'))
   async githubCallback(@Req() req: Request, @Res() res: Response) {
-    const socialUser = req.user as SocialLoginDto;
-    const loginDto: SocialLoginDto = {
-      provider: 'github',
-      providerId: socialUser.providerId,
-      name: socialUser.name,
-      avatar: socialUser.avatar || '',
-      email: socialUser.email
-    };
-    const token = await this.authService.socialLogin(loginDto);
-    return res.redirect(`http://localhost:3000?token=${token}`);
+    try {
+      const socialUser = req.user as SocialLoginDto;
+      const loginDto: SocialLoginDto = {
+        provider: 'github',
+        providerId: socialUser.providerId,
+        name: socialUser.name,
+        avatar: socialUser.avatar || '',
+        email: socialUser.email
+      };
+      const userInfo = Buffer.from(JSON.stringify({
+        name: socialUser.name,
+        avatar: socialUser.avatar || ''
+      })).toString('base64');
+      const token = await this.authService.socialLogin(loginDto);
+      return res.redirect(`http://localhost:5179?token=${token}&user=${userInfo}`);
+    } catch (error) {
+      const err = error as { oauthError?: { code?: string } };
+      if (err?.oauthError?.code === 'ECONNRESET') {
+        return res.status(502).json({ message: "网络错误，请稍后重试" });
+      }
+    }
   }
 
   // Gitee 登录重定向
@@ -66,7 +77,26 @@ export class AuthController {
       avatar: socialUser.avatar || '',
       email: socialUser.email
     };
+    const userInfo = Buffer.from(JSON.stringify({
+      name: socialUser.name,
+      avatar: socialUser.avatar || ''
+    })).toString('base64');
     const token = await this.authService.socialLogin(loginDto);
-    return res.redirect(`http://localhost:3000?token=${token}`);
+    return res.redirect(`http://localhost:5179/auth?token=${token}&user=${userInfo}`);
+  }
+
+  @Post('send-reset')
+  async sendResetPasswordLink(@Body() email: resetPasswordDto) {
+    const response = await this.authService.sendResetPasswordLink(email);
+    return response;
+  }
+
+  @Post('reset-password')
+  async resetPassword(
+    @Query('token') token: string,  // 从 URL 查询参数中获取 token
+    @Body() resetPasswordDto: ResetPasswordDto, // 获取请求体中的 ResetPasswordDto
+  ) {
+    // 调用 AuthService 的 resetPassword 方法
+    return await this.authService.resetPassword(token, resetPasswordDto);
   }
 }

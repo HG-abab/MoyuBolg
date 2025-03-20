@@ -10,12 +10,14 @@ import { AuthService } from './auth.service'
 import { HashingService } from './hashing.service';
 import { GiteeStrategy } from './strategies/gitee.strategy'
 import { GithubStrategy } from './strategies/github.strategy'
+import { MailModule } from '../mail/mail.module';  // 导入 MailModule
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     ConfigModule.forFeature(jwtConfig),
     JwtModule.registerAsync(jwtConfig.asProvider()),
+    MailModule
   ],
   controllers: [AuthController],
   providers: [
