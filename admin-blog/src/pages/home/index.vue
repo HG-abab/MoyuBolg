@@ -12,7 +12,7 @@
               <a-dropdown placement="bottomRight">
                 <div class="user-dropdown-link">
                   <a-avatar :size="32" :src="userInfo.avatar || ''" class="user-avatar">
-                    {{ userInfo.nickname?.charAt(0) || 'U' }}
+                    {{ 'U' }}
                   </a-avatar>
                   <span class="username" v-if="!collapsed">{{ userInfo.nickname || userInfo.username }}</span>
                   <down-outlined class="dropdown-icon" />
@@ -163,19 +163,18 @@ import {
   LoginOutlined,
   DownOutlined
 } from '@ant-design/icons-vue';
+import { useUserStore } from '../../store/user';
 
+const userStore = useUserStore()
 const collapsed = ref(false);
 const selectedKeys = ref(['1']);
 const current = ref('mail');
 const router = useRouter();
 
-// 模拟用户信息 - 实际项目中从vuex/pinia获取
+// 用户信息
 const userInfo = ref({
-  id: 1,
-  username: 'admin',
-  nickname: '管理员',
+  username: '',
   avatar: '',
-  role: 'admin'
 });
 
 // 是否是移动设备
@@ -212,6 +211,7 @@ const handleLogout = () => {
       // 清除用户信息并跳转到登录页
       userInfo.value = null;
       message.success('已安全退出登录');
+      userStore.clearUser();
       router.push('/login');
     }
   });
@@ -235,6 +235,9 @@ onMounted(() => {
   if (window.innerWidth < 768) {
     collapsed.value = true;
   }
+
+  userInfo.value.username = userStore.userName
+  userInfo.value.avatar = userStore.userAvatar
 });
 
 watch(() => router.currentRoute.value.name, (newVal) => {

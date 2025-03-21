@@ -1,17 +1,21 @@
 <script setup>
 import { useColorMode } from '@vueuse/core'
 import pageBubble from '@/utils/pageBubble'
-import { onBeforeUnmount, onMounted, reactive, ref } from "vue";
+import { h, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import { notification } from 'ant-design-vue';
 import {
   LockOutlined,
   UserOutlined,
   GithubOutlined,
+  GoogleOutlined,
   WechatOutlined,
   QqOutlined
 } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router'
+import { AccountLogin } from '../../api/auth';
+import { useUserStore } from '../../store/user';
 
+const userStore = useUserStore()
 const mode = useColorMode()
 const bubbleCanvas = ref()
 const activeKey = ref('1')
@@ -48,17 +52,33 @@ const modeToggle = () => {
 }
 
 // 提交逻辑
-const submit = () => {
+const submit = async () => {
   formRef.value
     .validate()
     .then(() => {
       submitLoading.value = true
-      notification.success({
-        message: '登录成功',
-        description: '欢迎回来！',
-        duration: 3,
+      AccountLogin({
+        account: formState.username,
+        password: formState.password
+      }).then((res) => {
+        if (res.code === 0) {
+          notification.success({
+            message: '登录成功',
+            description: '欢迎回来！',
+            duration: 3,
+          })
+          userStore.setUserToken(res.data.token)
+          userStore.setUserName(res.data.user.name)
+          userStore.setUserAvatar(res.data.user.avatar)
+          router.push('/')
+        } else {
+          notification.error({
+            message: `登录失败`,
+            description: res.msg,
+            duration: 3,
+          })
+        }
       })
-      router.push('/')
     })
     .catch((error) => {
       notification.error({
@@ -66,9 +86,9 @@ const submit = () => {
         description: '请联系管理员',
         duration: 3,
       })
-    });
-
-  submitLoading.value = false
+    }).finally(() => {
+      submitLoading.value = false
+    })
 }
 
 // 响应式处理
@@ -304,7 +324,6 @@ onBeforeUnmount(() => {
 
           .login-welcome {
             text-align: center;
-            margin-bottom: 25px;
 
             h2 {
               font-size: 28px;
@@ -469,5 +488,49 @@ onBeforeUnmount(() => {
       }
     }
   }
+}
+
+.oauth-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.oauth-btn {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+
+.github {
+  background: #24292e;
+  color: #fff;
+}
+
+.github:hover {
+  background: #1b1f23;
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.gitee {
+  background: #d81e06;
+  color: #fff;
+}
+
+.gitee:hover {
+  background: #b61605;
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(216, 30, 6, 0.3);
+}
+
+.oauth-btn:active {
+  transform: scale(0.8);
 }
 </style>

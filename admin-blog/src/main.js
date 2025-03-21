@@ -18,9 +18,11 @@ import globalComponent from '@/components/install.js' // 全局组件
 
 // pinia
 import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate' 
 
 const app = createApp(App)
 const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
 app.config.productionTip = false
 
 app.use(router)
