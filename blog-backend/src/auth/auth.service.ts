@@ -126,7 +126,8 @@ export class AuthService {
     })
 
     // 发送重置密码链接到用户邮箱
-    const resetLink = `http://localhost:5179/reset?token=${resetToken}`;
+    const frontendUrl = process.env.FRONTEND_URL
+    const resetLink = `${frontendUrl}/reset?token=${resetToken}`;
 
     await this.mailService.sendMail({
       to: email,
