@@ -86,6 +86,13 @@ const routes = [
           title: '树洞管理',
         },
         component: () => import('../pages/tree-hole/index.vue'),
+      }, {
+        path: '/users',
+        name: 'users',
+        meta: {
+          title: '用户管理'
+        },
+        component: () => import('../pages/users/index.vue'),
       },
       {
         path: '/redirect/:path(.*)',

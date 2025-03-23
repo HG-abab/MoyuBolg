@@ -1,8 +1,9 @@
 // src/users/users.service.ts
-import { Injectable } from '@nestjs/common'
+import { BadGatewayException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from './entities/user.entity'
+import {  isCheckedUserDto } from './dto/user.dto'
 
 @Injectable()
 export class UsersService {
@@ -14,4 +15,48 @@ export class UsersService {
   findAll(): Promise<User[]> {
     return this.userRepository.find()
   }
+
+  // 根据id查找用户
+  async findOne(id: number): Promise<User> {
+    if (!id) {
+      throw new BadGatewayException('用户id不能为空')
+    }
+    const user = await this.userRepository.findOne({
+      where: { id },
+    })
+    if (!user) {
+      throw new BadGatewayException('用户不存在')
+    }
+    return user
+  }
+
+  // 删除
+  async remove(id: number): Promise<User> {
+    if (!id) {
+      throw new BadGatewayException('用户id不能为空')
+    }
+    const user = await this.userRepository.findOne({
+      where: { id },
+    })
+    if (!user) {
+      throw new BadGatewayException('用户不存在')
+    }
+    return await this.userRepository.remove(user)
+  }
+  
+  // 是否是管理员
+  async updateIsAdmin(isCheckedUserDto: isCheckedUserDto): Promise<User> {
+    const { id, isChecked } = isCheckedUserDto;
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
+    if (!user) {
+      throw new BadGatewayException('用户不存在');
+    }
+    // 更新用户并保存
+    user.isChecked = isChecked;
+    // 返回更新后的用户
+    return this.userRepository.save(user);
+  }
+
 }

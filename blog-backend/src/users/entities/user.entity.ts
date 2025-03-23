@@ -31,4 +31,8 @@ export class User {
   // 新增字段：存储令牌过期时间
   @Column({ type: 'timestamp', nullable: true })
   resetTokenExpires: Date;
+
+  //是否具有管理员权限 0：没有 1：有
+  @Column()
+  isChecked: boolean
 }
