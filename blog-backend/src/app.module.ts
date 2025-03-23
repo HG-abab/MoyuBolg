@@ -18,12 +18,14 @@ import { AiModule } from './ai/ai.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
+import jwtConfig from '../jwt.config';  // 引入 jwt 配置
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,  // 设置为全局模块
       envFilePath: '.env',  // 指定环境文件路径
+      load: [jwtConfig], // 加载jwt配置
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public/uploaded'),

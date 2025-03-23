@@ -1,6 +1,7 @@
-import { Controller, Post, Body, BadRequestException, Get, Delete, Param, Put } from '@nestjs/common';
+import { Controller, Post, Body, BadRequestException, Get, Delete, Param, Put, UseGuards } from '@nestjs/common';
 import { InformationService, BgUrlService } from './information.service';
 import { InformationDto, CreateBgUrlDto } from './dto/information.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('information')
 export class InformationController {
@@ -28,6 +29,7 @@ export class InformationController {
 
 
   @Post('/updatebgurl')
+  @UseGuards(AuthGuard)
   async updateBgUrl(@Body() bgUrlDto: CreateBgUrlDto) {
     const savedBgUrl = await this.bgUrlService.updateBgUrl(bgUrlDto);
     return savedBgUrl;  // 返回保存后的 URL 和 ID
@@ -44,12 +46,14 @@ export class InformationController {
 
   // 删除图片(id)
   @Delete('/deletebgurl/:id')
+  @UseGuards(AuthGuard)
   async deleteBgUrl(@Param('id') id: number) {
     return await this.bgUrlService.deleteBgUrl(id);
   }
 
   // 排序
   @Put('sort')
+  @UseGuards(AuthGuard)
   async updateSortOrder(@Body() bgUrlDto: CreateBgUrlDto[]) {
     return await this.bgUrlService.updateSortOrder(bgUrlDto);
   }

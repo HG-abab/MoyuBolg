@@ -1,5 +1,5 @@
 
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Article } from './entities/article.entity';
 import { Tag } from '../tag/entities/tag.entity';
 import { Collect } from 'src/collect/entities/collect.entity';
@@ -85,7 +85,7 @@ export class ArticleService {
   }
 
   // 添加||更改文章
-  async addArticle(createArticleDto: CreateArticleDto): Promise<Article> {
+  async addArticle(createArticleDto: CreateArticleDto,req): Promise<Article> {
     const {
       id,
       articleCover,
@@ -105,6 +105,10 @@ export class ArticleService {
       if (!article) {
         throw new NotFoundException('文章未找到');
       }
+
+      if (article.userName !== req.name && !req.isChecked) { 
+      throw new ForbiddenException('无权限操作');
+    }
 
       // 保存原始的分类和标签
       const originalCategoryName = article.categoryName;
@@ -228,10 +232,14 @@ export class ArticleService {
   }
 
   // 根据 id 删除文章
-  async deleteArticle(id: number): Promise<Article> {
+  async deleteArticle(id: number,req): Promise<Article> {
     const article = await this.articleRepository.findOne({ where: { id } });
     if (!article) {
       throw new NotFoundException('文章未找到');
+    }
+
+    if (article.userName !== req.name && !req.isChecked) { 
+      throw new ForbiddenException('无权限操作');
     }
 
     // 获取文章的分类名称和标签名称
@@ -303,22 +311,29 @@ export class ArticleService {
   }
 
   // 更新文章状态
-  async updateArticleStatus(UpdateArticleStatusDto: UpdateArticleStatusDto): Promise<Article> {
+  async updateArticleStatus(UpdateArticleStatusDto: UpdateArticleStatusDto,req): Promise<Article> {
     const { id, status } = UpdateArticleStatusDto;
     const article = await this.articleRepository.findOne({ where: { id } });
     if (!article) {
       throw new NotFoundException('文章未找到');
+    }
+    if (article.userName !== req.name && !req.isChecked) { 
+      throw new ForbiddenException('无权限操作');
     }
     article.status = status;
     return await this.articleRepository.save(article);
   }
 
   // 更新文章置顶状态
-  async updateArticleIsTop(UpdateArticleTopDto: UpdateArticleTopDto): Promise<Article> {
+  async updateArticleIsTop(UpdateArticleTopDto: UpdateArticleTopDto, req): Promise<Article> {
     const { id, isTop } = UpdateArticleTopDto;
     const article = await this.articleRepository.findOne({ where: { id } });
     if (!article) {
       throw new NotFoundException('文章未找到');
+    }
+
+    if (article.userName !== req.name && !req.isChecked) { 
+      throw new ForbiddenException('无权限操作');
     }
     article.isTop = isTop;
     return await this.articleRepository.save(article);

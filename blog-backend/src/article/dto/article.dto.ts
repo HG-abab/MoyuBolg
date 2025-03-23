@@ -1,6 +1,8 @@
 import { IsString, IsNotEmpty, IsArray, IsNumber, IsOptional } from 'class-validator';
 import { Article } from '../entities/article.entity';
 
+// 创建一个自定义类型，扩展 Express 的 Request 类型，添加 user 属性
+
 export class CategoryWithArticles {
   id: number;
   categoryName: string;

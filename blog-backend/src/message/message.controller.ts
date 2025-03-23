@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { CreateMessageDto, IsCollectDto, IsLikeDto, SearchMessageDto, UpdateMessageDto } from './dto/message.dto';
 import { Message } from './entities/message.entity'
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('message')
 export class MessageController {
@@ -29,12 +30,14 @@ export class MessageController {
 
   // 更新审核状态
   @Put('/updateIsCheck')
+  @UseGuards(AuthGuard)
   async updateCheckStatus(@Body() UpdateMessageDto: UpdateMessageDto): Promise<Message> {
     return this.messageService.updateCheckStatus(UpdateMessageDto);
   }
 
   // 删除
   @Delete('/delete/:id')
+  @UseGuards(AuthGuard)
   async deleteMessage(@Param('id') id: number) {
     return this.messageService.deleteMessage(id);
   }

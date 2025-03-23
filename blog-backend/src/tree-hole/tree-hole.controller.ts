@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { TreeHoleService } from './tree-hole.service';
 import { TreeHole } from './entities/tree-hole.entity';
 import { CreateTreeHoleDto, isCheckTreeHoleDto, SearchTreeHoleDto } from './dto/tree-hole.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 
 @Controller('tree-hole')
@@ -26,12 +27,14 @@ export class TreeHoleController {
 
   // 是否通过
   @Put('isCheck')
+  @UseGuards(AuthGuard)
   async isCheck(@Body() isCheckTreeHoleDto: isCheckTreeHoleDto): Promise<TreeHole> {
     return this.treeHoleService.checkTreeHole(isCheckTreeHoleDto);
   }
 
   // 删除
   @Delete('/delete/:id')
+  @UseGuards(AuthGuard)
   async deleteTreeHole(@Param('id') id: number): Promise<TreeHole> {
     return this.treeHoleService.deleteTreeHole(id);
   }

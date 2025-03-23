@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { Article } from './entities/article.entity';
 import { ArticleSearchDto, CategoryWithArticles, CreateArticleDto, IsCollectDto, IsLikeDto, SearchDto, TagWithArticles, UpdateArticleStatusDto, UpdateArticleTopDto } from './dto/article.dto';
 import { SearchRecords } from './entities/searchRecords.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
+
 
 @Controller('article')
 export class ArticleController {
@@ -46,15 +48,17 @@ export class ArticleController {
   }
 
   @Post('/addActicle')
-  async addArticle(@Body() CreateArticleDto: CreateArticleDto): Promise<Article> {
-    return this.articleService.addArticle(CreateArticleDto)
+  @UseGuards(AuthGuard)
+  async addArticle(@Body() CreateArticleDto: CreateArticleDto, @Request() req): Promise<Article> {
+    return this.articleService.addArticle(CreateArticleDto, req.user)
   }
 
 
   // 删除指定文章
   @Delete('/deleteArticle')
-  async deleteArticle(@Param('id') id: number): Promise<Article> {
-    return this.articleService.deleteArticle(id)
+  @UseGuards(AuthGuard)
+  async deleteArticle(@Param('id') id: number, @Request() req): Promise<Article> {
+    return this.articleService.deleteArticle(id, req.user)
   }
 
   // 获取搜索记录
@@ -74,14 +78,16 @@ export class ArticleController {
 
   // 更新文章状态
   @Put('/updateArticle')
-  async updateArticle(@Body() UpdateArticleStatusDto: UpdateArticleStatusDto): Promise<Article> {
-    return this.articleService.updateArticleStatus(UpdateArticleStatusDto)
+  @UseGuards(AuthGuard)
+  async updateArticle(@Body() UpdateArticleStatusDto: UpdateArticleStatusDto, @Request() req): Promise<Article> {
+    return this.articleService.updateArticleStatus(UpdateArticleStatusDto, req.user)
   }
 
   // 更新置顶状态
   @Put('/updateArticleTop')
-  async updateArticleTop(@Body() UpdateArticleTopDto: UpdateArticleTopDto): Promise<Article> {
-    return this.articleService.updateArticleIsTop(UpdateArticleTopDto)
+  @UseGuards(AuthGuard)
+  async updateArticleTop(@Body() UpdateArticleTopDto: UpdateArticleTopDto, @Request() req): Promise<Article> {
+    return this.articleService.updateArticleIsTop(UpdateArticleTopDto, req.user)
   }
 
   // 搜索

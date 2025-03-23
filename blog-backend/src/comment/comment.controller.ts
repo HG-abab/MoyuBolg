@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { Comment } from './entities/comment.entity';
 import { CreateCommentDto, DeleteCommentDto, IsCommentCheckDto, SearchCommentByTypeIdDto, SearchCommentDto } from './dto/comment.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('comment')
 export class CommentController {
@@ -33,12 +34,14 @@ export class CommentController {
 
   // 是否通过
   @Put('/isCheck')
+  @UseGuards(AuthGuard)
   async isCheck(@Body() IsCommentCheckDto: IsCommentCheckDto): Promise<Comment> {
     return this.commentService.isCheck(IsCommentCheckDto)
   } o
 
   // 删除评论
   @Delete('/delete')
+  @UseGuards(AuthGuard)
   async deleteComment(@Body() DeleteCommentDto: DeleteCommentDto): Promise<Comment> {
     return this.commentService.deleteComment(DeleteCommentDto)
   }

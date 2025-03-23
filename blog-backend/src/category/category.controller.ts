@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { Category } from './entities/category.entity'
 import { CreateCategoryDto, updateCategoryDto } from './dto/category.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('category')
 export class CategoryController {
@@ -31,6 +32,7 @@ export class CategoryController {
 
   // 删除
   @Delete('/deletecategory/:id')
+  @UseGuards(AuthGuard)
   async delete(@Param('id') id: number): Promise<Category> {
     return await this.categoryService.delete(id);
   }

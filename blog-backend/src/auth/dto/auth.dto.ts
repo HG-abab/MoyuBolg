@@ -64,13 +64,6 @@ export class ResetPasswordDto {
   newPassword: string;
 }
 
-export interface JwtPayload {
-  sub: number;  // 用户 ID
-  iat?: number; // 可选的：签发时间
-  exp?: number; // 可选的：过期时间
-}
-
-
 export class resetPasswordDto {
   @IsString()
   @IsNotEmpty()
@@ -82,4 +75,13 @@ export class TokenPasswordDto {
   @IsString()
   @IsNotEmpty()
   token: string
+}
+
+export interface JwtPayload {
+  sub: number;        // 用户 ID
+  email: string;      // 用户邮箱
+  name: string;       // 用户名
+  isChecked: boolean; // 是否通过审核
+  exp?: number;       // 过期时间（可选）
+  iat?: number;       // 签发时间（可选）
 }

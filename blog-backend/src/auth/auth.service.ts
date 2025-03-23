@@ -68,12 +68,20 @@ export class AuthService {
     }
 
     // 生成 JWT 令牌
-    const payload = { sub: user.id, email: user.email, name: user.name };
-    const token = this.jwtService.sign(payload, { secret: this.jwtConfiguration.secret, expiresIn: '7d' });
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      isChecked: user.isChecked,
+    };
+    const token = this.jwtService.sign(payload, {
+      secret: this.jwtConfiguration.secret,
+      expiresIn: '7d'
+    });
 
     return {
       message: 'Login successful',
-      user: { id: user.id, name: user.name, email: user.email, avatar: user.avatar},
+      user: { id: user.id, name: user.name, email: user.email, avatar: user.avatar },
       token
     };
   }
@@ -97,7 +105,12 @@ export class AuthService {
     }
 
     // 生成 JWT 令牌
-    const payload = { sub: user.id, email: user.email, name: user.name };
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      isChecked: user.isChecked,
+    };
     const token = this.jwtService.sign(payload, {
       secret: this.jwtConfiguration.secret,
       expiresIn: '24h',

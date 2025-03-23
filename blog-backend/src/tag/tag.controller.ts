@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { TagService } from './tag.service';
 import { createTagDto, TagResponseDto, updateTagDto } from './dto/tag.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('tag')
 export class TagController {
@@ -20,6 +21,7 @@ export class TagController {
 
   // 删除
   @Delete('/deleteTag/:id')
+  @UseGuards(AuthGuard)
   async delete(@Param('id') id: number): Promise<TagResponseDto> {
     return await this.tagService.delete(id);
   }
