@@ -136,3 +136,8 @@ export class SearchDto {
   @IsNotEmpty()
   type: number;
 }
+
+export interface UserInfo {
+  name: string;
+  isChecked: boolean;
+}

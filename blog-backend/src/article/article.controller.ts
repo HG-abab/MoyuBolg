@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { Article } from './entities/article.entity';
-import { ArticleSearchDto, CategoryWithArticles, CreateArticleDto, IsCollectDto, IsLikeDto, SearchDto, TagWithArticles, UpdateArticleStatusDto, UpdateArticleTopDto } from './dto/article.dto';
+import { ArticleSearchDto, CategoryWithArticles, CreateArticleDto, IsCollectDto, IsLikeDto, SearchDto, TagWithArticles, UpdateArticleStatusDto, UpdateArticleTopDto, UserInfo } from './dto/article.dto';
 import { SearchRecords } from './entities/searchRecords.entity';
 import { AuthGuard } from 'src/auth/auth.guard';
 
@@ -49,7 +49,7 @@ export class ArticleController {
 
   @Post('/addActicle')
   @UseGuards(AuthGuard)
-  async addArticle(@Body() CreateArticleDto: CreateArticleDto, @Request() req): Promise<Article> {
+  async addArticle(@Body() CreateArticleDto: CreateArticleDto, req: { user: UserInfo }): Promise<Article> {
     return this.articleService.addArticle(CreateArticleDto, req.user)
   }
 
@@ -57,7 +57,7 @@ export class ArticleController {
   // 删除指定文章
   @Delete('/deleteArticle')
   @UseGuards(AuthGuard)
-  async deleteArticle(@Param('id') id: number, @Request() req): Promise<Article> {
+  async deleteArticle(@Param('id') id: number, @Request() req: { user: UserInfo }): Promise<Article> {
     return this.articleService.deleteArticle(id, req.user)
   }
 
@@ -79,14 +79,14 @@ export class ArticleController {
   // 更新文章状态
   @Put('/updateArticle')
   @UseGuards(AuthGuard)
-  async updateArticle(@Body() UpdateArticleStatusDto: UpdateArticleStatusDto, @Request() req): Promise<Article> {
+  async updateArticle(@Body() UpdateArticleStatusDto: UpdateArticleStatusDto, @Request() req: { user: UserInfo }): Promise<Article> {
     return this.articleService.updateArticleStatus(UpdateArticleStatusDto, req.user)
   }
 
   // 更新置顶状态
   @Put('/updateArticleTop')
   @UseGuards(AuthGuard)
-  async updateArticleTop(@Body() UpdateArticleTopDto: UpdateArticleTopDto, @Request() req): Promise<Article> {
+  async updateArticleTop(@Body() UpdateArticleTopDto: UpdateArticleTopDto, @Request()req: { user: UserInfo }): Promise<Article> {
     return this.articleService.updateArticleIsTop(UpdateArticleTopDto, req.user)
   }
 

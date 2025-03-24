@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { WebsiteInformation } from 'src/information/entities/information.entity';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { marked } from 'marked'
-import { ArticleSearchDto, CategoryWithArticles, CreateArticleDto, IsCollectDto, IsLikeDto, SearchDto, TagWithArticles, UpdateArticleStatusDto, UpdateArticleTopDto } from './dto/article.dto';
+import { ArticleSearchDto, CategoryWithArticles, CreateArticleDto, IsCollectDto, IsLikeDto, SearchDto, TagWithArticles, UpdateArticleStatusDto, UpdateArticleTopDto, UserInfo } from './dto/article.dto';
 import { Like as Likes } from './entities/likes.entity';
 import { SearchRecords } from './entities/searchRecords.entity';
 import { Favorite } from './entities/favorites.entity';
@@ -85,7 +85,7 @@ export class ArticleService {
   }
 
   // 添加||更改文章
-  async addArticle(createArticleDto: CreateArticleDto, req): Promise<Article> {
+  async addArticle(createArticleDto: CreateArticleDto, req: UserInfo): Promise<Article> {
     const {
       id,
       articleCover,
@@ -232,7 +232,7 @@ export class ArticleService {
   }
 
   // 根据 id 删除文章
-  async deleteArticle(id: number, req): Promise<Article> {
+  async deleteArticle(id: number, req: UserInfo): Promise<Article> {
     const article = await this.articleRepository.findOne({ where: { id } });
     if (!article) {
       throw new NotFoundException('文章未找到');
@@ -311,7 +311,7 @@ export class ArticleService {
   }
 
   // 更新文章状态
-  async updateArticleStatus(UpdateArticleStatusDto: UpdateArticleStatusDto, req): Promise<Article> {
+  async updateArticleStatus(UpdateArticleStatusDto: UpdateArticleStatusDto, req: UserInfo): Promise<Article> {
     const { id, status } = UpdateArticleStatusDto;
     const article = await this.articleRepository.findOne({ where: { id } });
     if (!article) {
@@ -325,7 +325,7 @@ export class ArticleService {
   }
 
   // 更新文章置顶状态
-  async updateArticleIsTop(UpdateArticleTopDto: UpdateArticleTopDto, req): Promise<Article> {
+  async updateArticleIsTop(UpdateArticleTopDto: UpdateArticleTopDto, req: UserInfo): Promise<Article> {
     const { id, isTop } = UpdateArticleTopDto;
     const article = await this.articleRepository.findOne({ where: { id } });
     if (!article) {
