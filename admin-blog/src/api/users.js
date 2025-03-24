@@ -12,3 +12,6 @@ export const getUserById = (id) => request.get(`/users/${id}`)
 
 // 删除
 export const deleteUser = (id) => request.delete(`/users/${id}`)
+
+// 修改用户
+export const updateUser = (data) => request.put(`/users/update`, data)

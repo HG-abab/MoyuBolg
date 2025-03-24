@@ -3,7 +3,7 @@ import { BadGatewayException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from './entities/user.entity'
-import {  isCheckedUserDto } from './dto/user.dto'
+import { isCheckedUserDto, UserDto } from './dto/user.dto'
 
 @Injectable()
 export class UsersService {
@@ -43,7 +43,33 @@ export class UsersService {
     }
     return await this.userRepository.remove(user)
   }
-  
+
+  // 修改用户信息
+  async upUserdate(UserDto: UserDto): Promise<User> {
+    const { id, name, copy, avatar, giteeLink, githubLink, webmasterProfileBackground } = UserDto;
+    let user = await this.userRepository.findOne({
+      where: { id },
+    })
+    if (!user) {
+      throw new BadGatewayException('用户不存在')
+    }
+    await this.userRepository.update(id, {
+      name,
+      copy,
+      avatar,
+      giteeLink,
+      githubLink,
+      webmasterProfileBackground
+    })
+    user = await this.userRepository.findOne({
+      where: { id },
+    })
+    if (!user) {
+      throw new BadGatewayException('用户不存在')
+    }
+    return user
+  }
+
   // 是否是管理员
   async updateIsAdmin(isCheckedUserDto: isCheckedUserDto): Promise<User> {
     const { id, isChecked } = isCheckedUserDto;

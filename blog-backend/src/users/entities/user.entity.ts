@@ -11,6 +11,18 @@ export class User {
   @Column()
   email: string
 
+  @Column({ length: 255 })
+  copy: string; // 站长文案
+  
+  @Column({ length: 255 })
+  webmasterProfileBackground: string; // 头像背景图
+
+  @Column({ length: 255 })
+  githubLink: string; // Github地址
+
+  @Column({ length: 255 })
+  giteeLink: string; // Gitee地址
+
   @Column({ nullable: true })
   password: string
 

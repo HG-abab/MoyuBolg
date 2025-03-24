@@ -1,115 +1,116 @@
 <script setup>
-  import { reactive, ref, onMounted } from "vue";
-  import { PlusOutlined, LoadingOutlined, UploadOutlined } from '@ant-design/icons-vue';
-  import { message } from 'ant-design-vue';
-  import { saveWebSiteInfo } from '@/api/information'
+import { reactive, ref, onMounted } from "vue";
+import { PlusOutlined, LoadingOutlined, UploadOutlined } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
+import { updateUser } from "../../../api/users";
 
-  const emit = defineEmits(['reset:info'])
-  const props = defineProps({
-    info: {
-      type: Object,
+const emit = defineEmits(['reset:info'])
+const props = defineProps({
+  info: {
+    type: Object,
+  }
+})
+
+const formData = reactive({ ...props.info });
+const avatarFileList = ref([]);
+const loading = ref(false);
+const imageUrl = ref('');
+const backFileList = ref([]);
+
+if (formData.avatar && formData.webmasterProfileBackground) {
+  imageUrl.value = formData.avatar;
+  backFileList.value = [
+    {
+      thumbUrl: formData.webmasterProfileBackground,
+      name: 'background.jpg', // 设置文件名
+    },
+  ];
+}
+
+// 获取文件的 base64 编码
+function getBase64(file, callback) {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => callback(reader.result);
+  reader.onerror = (error) => {
+    message.error('文件读取失败');
+  };
+}
+
+// 头像上传回调
+function handleChangeAvatar(info) {
+  if (info.file.status === 'uploading') {
+    loading.value = true;
+    return;
+  }
+  if (info.file.status === 'done') {
+    getBase64(info.file.originFileObj, (base64Url) => {
+      imageUrl.value = base64Url;
+      loading.value = false;
+    });
+  }
+  if (info.file.response && info.file.response.code === 0) {
+    formData.avatar = info.file.response.data.path;
+    message.success('头像上传成功');
+  } else {
+    message.error(`头像上传失败：${info.file.response?.msg || '未知错误'}`);
+  }
+  loading.value = false;
+}
+
+
+// 背景上传回调
+function handleChangeBack(info) {
+  if (info.file.status === 'uploading') {
+    return;
+  }
+  if (info.file.response && info.file.response.code === 0) {
+    formData.webmasterProfileBackground = info.file.response.data.path;
+    message.success('背景上传成功');
+  } else {
+    message.error(`背景上传失败：${info.file.response?.msg || '未知错误'}`);
+  }
+}
+
+// 检验图片格式
+function beforeUpload(file) {
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/webp';
+  if (!isJpgOrPng) {
+    message.error('文件格式必须是 jpg、png 或 webp');
+  }
+
+  const isLt2M = file.size / 1024 / 1024 < 5;
+  if (!isLt2M) {
+    message.error('图片必须小于 5MB');
+  }
+
+  return isJpgOrPng && isLt2M;
+}
+
+function updateStationmasterInfo() {
+  updateUser(formData).then((res) => {
+    if (res.code === 0) {
+      message.success('保存成功');
+    } else {
+      message.error(`保存失败：${res.msg || '未知错误'}`);
     }
   })
+}
 
-  const formData = reactive({ ...props.info });
-
-  const avatarFileList = ref([]);
-  const loading = ref(false);
-  const imageUrl = ref('');
-  const backFileList = ref([]);
-
-  if (formData.webmasterAvatar && formData.webmasterProfileBackground) {
-    imageUrl.value = formData.webmasterAvatar;
-    backFileList.value = [
-      {
-        thumbUrl: formData.webmasterProfileBackground,
-        name: 'background.jpg', // 设置文件名
-      },
-    ];
-  }
-
-  // 获取文件的 base64 编码
-  function getBase64(file, callback) {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => callback(reader.result);
-    reader.onerror = (error) => {
-      message.error('文件读取失败');
-    };
-  }
-
-  // 头像上传回调
-  function handleChangeAvatar(info) {
-    if (info.file.status === 'uploading') {
-      loading.value = true;
-      return;
-    }
-    if (info.file.status === 'done') {
-      getBase64(info.file.originFileObj, (base64Url) => {
-        imageUrl.value = base64Url;
-        loading.value = false;
-      });
-    }
-    if (info.file.response && info.file.response.code === 0) {
-      formData.webmasterAvatar = info.file.response.data.path;
-      message.success('头像上传成功');
-    } else {
-      message.error(`头像上传失败：${info.file.response?.msg || '未知错误'}`);
-    }
-    loading.value = false;
-  }
-
-
-  // 背景上传回调
-  function handleChangeBack(info) {
-    if (info.file.status === 'uploading') {
-      return;
-    }
-    if (info.file.response && info.file.response.code === 0) {
-      formData.webmasterProfileBackground = info.file.response.data.path;
-      message.success('背景上传成功');
-    } else {
-      message.error(`背景上传失败：${info.file.response?.msg || '未知错误'}`);
-    }
-  }
-
-  // 检验图片格式
-  function beforeUpload(file) {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/webp';
-    if (!isJpgOrPng) {
-      message.error('文件格式必须是 jpg、png 或 webp');
-    }
-
-    const isLt2M = file.size / 1024 / 1024 < 5;
-    if (!isLt2M) {
-      message.error('图片必须小于 5MB');
-    }
-
-    return isJpgOrPng && isLt2M;
-  }
-
-  function updateStationmasterInfo() {
-    saveWebSiteInfo(formData).then((res) => {
-      if (res.code === 0) {
-        message.success('保存成功');
-      } else {
-        message.error(`保存失败：${res.msg || '未知错误'}`);
-      }
-    })
-  }
-
-  // 重置
-  function resetInfo() {
-    emit('reset:info')
-    Object.assign(formData, props.info);
-  }
+// 重置
+function resetInfo() {
+  emit('reset:info')
+  Object.assign(formData, props.info);
+}
 </script>
 
 <template>
   <div class="info">
     <a-form>
       <div class="avatar">
-        <a-upload v-model:file-list="avatarFileList" name="file" action="http://localhost:3000/api/upload" list-type="picture-card" class="avatar-uploader" :show-upload-list="false" :before-upload="beforeUpload" @change="handleChangeAvatar">
+        <a-upload v-model:file-list="avatarFileList" name="file" action="http://localhost:3000/api/upload"
+                  list-type="picture-card" class="avatar-uploader" :show-upload-list="false"
+                  :before-upload="beforeUpload" @change="handleChangeAvatar">
           <img v-if="imageUrl" :src="imageUrl" alt="avatar">
           <div v-else>
             <LoadingOutlined v-if="loading" />
@@ -121,14 +122,16 @@
         </a-upload>
       </div>
       <a-form-item label="名称">
-        <a-input v-model:value="formData.webmasterName" />
+        <a-input v-model:value="formData.name" />
       </a-form-item>
       <a-form-item label="文案">
-        <a-input v-model:value="formData.webmasterCopy" />
+        <a-input v-model:value="formData.copy" />
       </a-form-item>
       <a-form-item label="背景">
         <div>
-          <a-upload v-model:file-list="backFileList" list-type="picture" name="file" :show-upload-list="{ showRemoveIcon: false }" :before-upload="beforeUpload" :max-count="1" action="http://localhost:3000/api/upload" @change="handleChangeBack">
+          <a-upload v-model:file-list="backFileList" list-type="picture" name="file"
+                    :show-upload-list="{ showRemoveIcon: false }" :before-upload="beforeUpload" :max-count="1"
+                    action="http://localhost:3000/api/upload" @change="handleChangeBack">
             <div style="display: flex">
               <a-button>
                 <UploadOutlined />
@@ -171,11 +174,13 @@
     }
   }
 }
-.ant-divider{
+
+.ant-divider {
   margin: 1rem 0;
   padding: 0 26%;
 }
-:deep(.ant-form-item-row){
+
+:deep(.ant-form-item-row) {
   width: 50%;
   margin: 0 auto;
 }

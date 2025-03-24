@@ -17,3 +17,28 @@ export class findUserByIdDto {
   @IsNotEmpty()
   id: number;
 }
+
+
+export class UserDto {
+  @IsNumber()
+  @IsNotEmpty()
+  id: number;
+
+  @IsNotEmpty()
+  name: string;
+
+  @IsNotEmpty()
+  copy: string;
+
+  @IsNotEmpty()
+  webmasterProfileBackground: string;
+
+  @IsNotEmpty()
+  githubLink?: string;
+
+  @IsNotEmpty()
+  giteeLink?: string;
+
+  @IsNotEmpty()
+  avatar: string;
+}

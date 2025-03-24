@@ -1,27 +1,9 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 
-@Entity('info')
-export class Information {
-  @PrimaryColumn()
-  id: number; // 主键
-
-  @Column({ length: 50 })
-  webmasterName: string; // 站长名字
-
-  @Column({ length: 255 })
-  webmasterCopy: string; // 站长文案
-
-  @Column({ length: 255 })
-  webmasterAvatar: string; // 头像
-  
-  @Column({ length: 255 })
-  webmasterProfileBackground: string; // 头像背景图
-
-  @Column({ length: 255 })
-  githubLink: string; // Github地址
-
-  @Column({ length: 255 })
-  giteeLink: string; // Gitee地址
+@Entity('website_information')
+export class WebsiteInformation {
+  @PrimaryGeneratedColumn()
+  id: number; // 网站信息ID，自动递增主键
 
   @Column({ length: 100 })
   websiteName: string; // 网站名称

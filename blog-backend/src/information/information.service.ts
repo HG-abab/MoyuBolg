@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Information } from './entities/information.entity';
+import { WebsiteInformation } from './entities/information.entity';
 import { BgUrl } from './entities/bgurl.entity';
 import { InformationDto, CreateBgUrlDto } from './dto/information.dto';
 
@@ -9,16 +9,18 @@ import { InformationDto, CreateBgUrlDto } from './dto/information.dto';
 export class InformationService {
   constructor(
     // 注入 Information 实体的存储库
-    @InjectRepository(Information)
-    private readonly informationRepository: Repository<Information>,
+    @InjectRepository(WebsiteInformation)
+    private readonly informationRepository: Repository<WebsiteInformation>,
   ) { }
 
-  async updateStationMaster(informationDto: InformationDto): Promise<Information> {
+  // 更新网站信息
+  async updateStationMaster(informationDto: InformationDto): Promise<WebsiteInformation> {
     const newData = { id: 1, ...informationDto }; // 确保 ID 为 1
     return await this.informationRepository.save(newData); // TypeORM `save()` 自动插入或更新
   }
 
-  async getStationMaster(): Promise<Information | null> {
+  // 获取网站信息
+  async getStationMaster(): Promise<WebsiteInformation | null> {
     return await this.informationRepository.findOne({ where: { id: 1 } });
   }
 }

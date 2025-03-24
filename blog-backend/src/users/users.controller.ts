@@ -1,7 +1,7 @@
 // src/users/users.controller.ts
 import { Body, Controller, Delete, Get, Param, Put, UseGuards } from '@nestjs/common'
 import { UsersService } from './users.service'
-import { isCheckedUserDto } from './dto/user.dto'
+import { isCheckedUserDto, UserDto } from './dto/user.dto'
 import { User } from './entities/user.entity'
 import { AuthGuard } from 'src/auth/auth.guard'
 
@@ -18,6 +18,12 @@ export class UsersController {
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.usersService.findOne(id);
+  }
+
+  // 修改用户信息
+  @Put('/update')
+  update(@Body() UserDto:UserDto): Promise<User> {
+    return this.usersService.upUserdate(UserDto);
   }
 
   // 删除

@@ -5,7 +5,7 @@ import { Tag } from '../tag/entities/tag.entity';
 import { Collect } from 'src/collect/entities/collect.entity';
 import { Category } from '../category/entities/category.entity'
 import { InjectRepository } from '@nestjs/typeorm';
-import { Information } from 'src/information/entities/information.entity';
+import { WebsiteInformation } from 'src/information/entities/information.entity';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { marked } from 'marked'
 import { ArticleSearchDto, CategoryWithArticles, CreateArticleDto, IsCollectDto, IsLikeDto, SearchDto, TagWithArticles, UpdateArticleStatusDto, UpdateArticleTopDto } from './dto/article.dto';
@@ -19,7 +19,7 @@ export class ArticleService {
     @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
     @InjectRepository(Category) private readonly categoryRepository: Repository<Category>,
     @InjectRepository(Collect) private readonly collectRepository: Repository<Collect>,
-    @InjectRepository(Information) private readonly informationRepository: Repository<Information>,
+    @InjectRepository(WebsiteInformation) private readonly informationRepository: Repository<WebsiteInformation>,
     @InjectRepository(Likes) private readonly likeRepository: Repository<Likes>,
     @InjectRepository(Favorite) private readonly favoriteRepository: Repository<Favorite>,
     @InjectRepository(SearchRecords) private readonly searchRepository: Repository<SearchRecords>,
@@ -85,7 +85,7 @@ export class ArticleService {
   }
 
   // 添加||更改文章
-  async addArticle(createArticleDto: CreateArticleDto,req): Promise<Article> {
+  async addArticle(createArticleDto: CreateArticleDto, req): Promise<Article> {
     const {
       id,
       articleCover,
@@ -106,9 +106,9 @@ export class ArticleService {
         throw new NotFoundException('文章未找到');
       }
 
-      if (article.userName !== req.name && !req.isChecked) { 
-      throw new ForbiddenException('无权限操作');
-    }
+      if (article.userName !== req.name && !req.isChecked) {
+        throw new ForbiddenException('无权限操作');
+      }
 
       // 保存原始的分类和标签
       const originalCategoryName = article.categoryName;
@@ -232,13 +232,13 @@ export class ArticleService {
   }
 
   // 根据 id 删除文章
-  async deleteArticle(id: number,req): Promise<Article> {
+  async deleteArticle(id: number, req): Promise<Article> {
     const article = await this.articleRepository.findOne({ where: { id } });
     if (!article) {
       throw new NotFoundException('文章未找到');
     }
 
-    if (article.userName !== req.name && !req.isChecked) { 
+    if (article.userName !== req.name && !req.isChecked) {
       throw new ForbiddenException('无权限操作');
     }
 
@@ -266,7 +266,7 @@ export class ArticleService {
         await this.tagRepository.save(tag);
       }
     }
-    // 从 information 表中扣除相应的
+    // 从 WebsiteInformation表中扣除相应的
     const information = await this.informationRepository.findOne({ where: { id: 1 } });
     if (information) {
       information.visitCount -= article.visitCount;
@@ -311,13 +311,13 @@ export class ArticleService {
   }
 
   // 更新文章状态
-  async updateArticleStatus(UpdateArticleStatusDto: UpdateArticleStatusDto,req): Promise<Article> {
+  async updateArticleStatus(UpdateArticleStatusDto: UpdateArticleStatusDto, req): Promise<Article> {
     const { id, status } = UpdateArticleStatusDto;
     const article = await this.articleRepository.findOne({ where: { id } });
     if (!article) {
       throw new NotFoundException('文章未找到');
     }
-    if (article.userName !== req.name && !req.isChecked) { 
+    if (article.userName !== req.name && !req.isChecked) {
       throw new ForbiddenException('无权限操作');
     }
     article.status = status;
@@ -332,7 +332,7 @@ export class ArticleService {
       throw new NotFoundException('文章未找到');
     }
 
-    if (article.userName !== req.name && !req.isChecked) { 
+    if (article.userName !== req.name && !req.isChecked) {
       throw new ForbiddenException('无权限操作');
     }
     article.isTop = isTop;
