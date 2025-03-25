@@ -11,16 +11,16 @@ export class User {
   @Column()
   email: string
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   copy: string; // 站长文案
-  
-  @Column({ length: 255 })
+
+  @Column({ length: 255, nullable: true })
   webmasterProfileBackground: string; // 头像背景图
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   githubLink: string; // Github地址
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   giteeLink: string; // Gitee地址
 
   @Column({ nullable: true })
@@ -44,7 +44,19 @@ export class User {
   @Column({ type: 'timestamp', nullable: true })
   resetTokenExpires: Date;
 
-  //是否具有管理员权限 0：没有 1：有
-  @Column()
+  //是否具有管理员权限
+  @Column({ default: false })
   isChecked: boolean
+
+  // 文章数量
+  @Column({ type: 'int' })
+  articleCount: number;
+
+  // 分类数
+  @Column({ type: 'int' })
+  categoryCount: number;
+
+  // 评论数
+  @Column({ type: 'int' })
+  commentCount: number;
 }

@@ -50,7 +50,7 @@ export class AuthController {
       })).toString('base64');
       const token = await this.authService.socialLogin(loginDto);
       const frontendUrl = process.env.FRONTEND_URL
-      return res.redirect(`${frontendUrl}?token=${token}&user=${userInfo}`);
+      return res.redirect(`${frontendUrl}/auth?token=${token}&user=${userInfo}`);
     } catch (error) {
       const err = error as { oauthError?: { code?: string } };
       if (err?.oauthError?.code === 'ECONNRESET') {
@@ -84,7 +84,7 @@ export class AuthController {
     })).toString('base64');
     const token = await this.authService.socialLogin(loginDto);
     const frontendUrl = process.env.FRONTEND_URL
-    return res.redirect(`${frontendUrl}?token=${token}&user=${userInfo}`);
+    return res.redirect(`${frontendUrl}/auth?token=${token}&user=${userInfo}`);
   }
 
   @Post('send-reset')

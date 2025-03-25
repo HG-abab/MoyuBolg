@@ -12,6 +12,7 @@ import { ArticleSearchDto, CategoryWithArticles, CreateArticleDto, IsCollectDto,
 import { Like as Likes } from './entities/likes.entity';
 import { SearchRecords } from './entities/searchRecords.entity';
 import { Favorite } from './entities/favorites.entity';
+import { User } from 'src/users/entities/user.entity';
 @Injectable()
 export class ArticleService {
   constructor(
@@ -23,6 +24,7 @@ export class ArticleService {
     @InjectRepository(Likes) private readonly likeRepository: Repository<Likes>,
     @InjectRepository(Favorite) private readonly favoriteRepository: Repository<Favorite>,
     @InjectRepository(SearchRecords) private readonly searchRepository: Repository<SearchRecords>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) { }
 
   async findAll(id?: number): Promise<Article[]> {
@@ -129,12 +131,22 @@ export class ArticleService {
       if (originalCategoryName !== categoryName) {
         const category = await this.categoryRepository.findOne({ where: { categoryName: originalCategoryName } });
         if (category) {
+          const user = await this.userRepository.findOne({ where: { name: userName } });
+          if (user) {
+            user.categoryCount -= 1;
+            await this.userRepository.save(user);
+          }
           category.articleCount -= 1;  // 原分类减去 1
           await this.categoryRepository.save(category);
         }
 
         const newCategory = await this.categoryRepository.findOne({ where: { categoryName: categoryName } });
         if (newCategory) {
+          const user = await this.userRepository.findOne({ where: { name: userName } });
+          if (user) {
+            user.categoryCount += 1;
+            await this.userRepository.save(user);
+          }
           newCategory.articleCount += 1;  // 新分类加 1
           await this.categoryRepository.save(newCategory);
         }
@@ -183,6 +195,13 @@ export class ArticleService {
         order: { id: 'DESC' },
       });
       const newId = maxId ? maxId.id + 1 : 1;
+
+      // 用户表文章 +1
+      const user = await this.userRepository.findOne({ where: { name: userName } });
+      if (user) {
+        user.articleCount += 1;
+        await this.userRepository.save(user);
+      }
 
       const article = this.articleRepository.create({
         id: newId,
@@ -248,6 +267,11 @@ export class ArticleService {
     // 更新分类表中的 articleCount
     const category = await this.categoryRepository.findOne({ where: { categoryName } });
     if (category) {
+      const user = await this.userRepository.findOne({ where: { name:article.userName } });
+      if (user) {
+        user.categoryCount -= 1;
+        await this.userRepository.save(user);
+      }
       category.articleCount -= 1;
       if (category.articleCount < 0) {
         category.articleCount = 0;

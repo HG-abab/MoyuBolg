@@ -4,7 +4,9 @@ import { User, Lock, Back, Message, Key } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import { login, register, resetPassword } from '../../api/auth';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '../../stores/user';
 
+const userStore = useUserStore();
 const router = useRouter();
 const emit = defineEmits(['login-success', 'close']);
 
@@ -106,8 +108,10 @@ const handleLogin = async () => {
           password: loginForm.password
         })
         if (res.code === 0) {
-          const userData = res.data.user
-          emit('login-success', userData);
+          userStore.setUserId(res.data.user.id)
+          userStore.settoken(res.data.token)
+          userStore.setusername(res.data.user.name)
+          userStore.setuseravatar(res.data.user.avatar)
           ElMessage.success('登录成功');
           router.push('/');
         } else {
@@ -125,11 +129,9 @@ const handleLogin = async () => {
 // 处理忘记密码
 const handleForgotPassword = async () => {
   if (!forgotFormRef.value) return;
-
   await forgotFormRef.value.validate(async (valid) => {
     if (valid) {
       forgotLoading.value = true;
-
       try {
         await resetPassword({
           "email": forgotForm.email
@@ -155,11 +157,9 @@ const handleForgotPassword = async () => {
 // 处理注册
 const handleRegister = async () => {
   if (!registerFormRef.value) return;
-
   await registerFormRef.value.validate(async (valid) => {
     if (valid) {
       registerLoading.value = true;
-
       try {
         const res = await register({
           "name": registerForm.username,

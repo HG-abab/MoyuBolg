@@ -452,6 +452,11 @@
     style-mod "^4.1.0"
     w3c-keyname "^2.2.4"
 
+"@cp-vuedir/icons@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.npmmirror.com/@cp-vuedir/icons/-/icons-0.1.5.tgz"
+  integrity sha512-4yPbdQJ3JhEB81JHhIXzM0IA5wyi/RZ233iLuVuBy303cQDbBEGXsfrf9zJvXbtg+aDTnHrmrxMQXTdTwIeIzw==
+
 "@ctrl/tinycolor@^3.4.0", "@ctrl/tinycolor@^3.4.1", "@ctrl/tinycolor@^3.5.0":
   version "3.6.1"
   resolved "https://registry.npmmirror.com/@ctrl/tinycolor/-/tinycolor-3.6.1.tgz"

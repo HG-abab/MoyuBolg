@@ -11,9 +11,10 @@ import { Like } from './entities/likes.entity';
 import { Favorite } from './entities/favorites.entity';
 import { SearchRecords } from './entities/searchRecords.entity';
 import { AuthModule } from 'src/auth/auth.module';
+import { User } from 'src/users/entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Article, Tag, Category, Collect, WebsiteInformation, Like, Favorite, SearchRecords]),AuthModule],
+  imports: [TypeOrmModule.forFeature([Article, Tag, Category, Collect, WebsiteInformation, Like, Favorite, SearchRecords, User]), AuthModule],
   controllers: [ArticleController],
   providers: [ArticleService],
 })

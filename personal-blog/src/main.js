@@ -20,6 +20,7 @@ import Viewer from 'v-viewer'
 import 'viewerjs/dist/viewer.css'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate' //引入持久化插件
+import VueDir from '@cp-vuedir/core'
 
 const app = createApp(App)
 // app.use(store)
@@ -38,10 +39,13 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
 
+app.use(VueDir)
+
 app.use(Lazyload, {
   loading: 'https://ts1.cn.mm.bing.net/th/id/R-C.953ed8c05902a48f647b521947886328?rik=WgLNh%2bqlpugRpg&riu=http%3a%2f%2fbid.cncecyc.com%2fopeninghall%2fimages%2floading.gif&ehk=z3EsmE%2b7REu7Yiu5ZK2V9MaZFgCZMCT8UJKLujrBNQ4%3d&risl=&pid=ImgRaw&r=0', //可以指定加载中的图像
   error: 'https://pic.616pic.com/ys_bnew_img/00/26/91/0vKNj9s4be.jpg', //可以指定加载失败的图像
 })
+
 app.mount('#app')
 
 // 图片查看

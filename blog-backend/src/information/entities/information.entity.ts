@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('website_information')
 export class WebsiteInformation {
@@ -8,10 +8,10 @@ export class WebsiteInformation {
   @Column({ length: 100 })
   websiteName: string; // 网站名称
 
-  @Column({ length: 255 })
+  @Column({ type: "text" })
   headerNotification: string; // 头部通知
 
-  @Column({ length: 255 })
+  @Column({ type: "text" })
   sidebarAnnouncement: string; // 侧边栏公告
 
   @Column({ length: 50 })

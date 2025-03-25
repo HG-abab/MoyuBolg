@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import { User, Close, Paperclip, UserFilled, Headset, Tools, Setting, SwitchButton, Document } from '@element-plus/icons-vue'
 import { HomeFilled } from '@element-plus/icons-vue'
 import pigeOnhole from './nav-item/nav-item-pigeonhole.vue'
@@ -8,7 +8,6 @@ import DayNightToggleButton from '../DayNightToggle/index'
 import { useColorMode } from '@vueuse/core'
 import navSearch from '../navSearch/index.vue'
 import Mobile from './Mobilenavigation/index.vue'
-import LoginForm from '../LoginForm/index.vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/User'
@@ -32,26 +31,20 @@ const userInfo = ref({
 
 onMounted(async () => {
   customElements.define("toggle-button", DayNightToggleButton);
-  checkLoginStatus();
-  if (userStore.token) {
-    isLoggedIn.value = true
-    userInfo.value.username = userStore.username
-    userInfo.value.avatar = userStore.useravatar
-  }
 })
 
-// 检查登录状态
-const checkLoginStatus = () => {
-  const token = localStorage.getItem('token')
-  if (token) {
-    isLoggedIn.value = true
-    // 获取用户信息
-    const userInfoData = localStorage.getItem('userInfo')
-    if (userInfoData) {
-      userInfo.value = JSON.parse(userInfoData)
-    }
+// 监听 Pinia 中 `token` 的变化，动态更新登录状态
+watchEffect(() => {
+  if (userStore.token) {
+    isLoggedIn.value = true;
+    userInfo.value.username = userStore.username;
+    userInfo.value.avatar = userStore.useravatar;
+  } else {
+    isLoggedIn.value = false;
+    userInfo.value = { username: "", avatar: "" };
   }
-}
+});
+
 
 // 处理下拉菜单命令
 const handleCommand = (command) => {
@@ -69,19 +62,9 @@ const navigateTo = (path) => {
   userDrawer.value = false
 }
 
-// 登录成功处理
-const handleLoginSuccess = (userData) => {
-  isLoggedIn.value = true
-  userInfo.value = userData
-  localStorage.setItem('userInfo', JSON.stringify(userData))
-  loginVisible.value = false
-  ElMessage.success('登录成功！')
-}
-
 // 退出登录
 const logout = () => {
-  localStorage.removeItem('token')
-  localStorage.removeItem('userInfo')
+  userStore.removeUserInfo()
   isLoggedIn.value = false
   userInfo.value = {
     username: '',
@@ -147,8 +130,10 @@ onUnmounted(() => {
   <transition name="fade">
     <div class="navigation" v-if="isHidden">
       <div class="left">
-        <el-link href="/" style="cursor:default;margin-left:4px; padding-right: 8px"
-                 :underline="false">Moyu-开摆</el-link>
+        <el-link href="/" style="cursor:default;margin-left:8px; padding-right: 8px" :underline="false">
+          Moyu
+          <SvgIcon name="webActive" width="24px" height="16px" style="margin-left: 5px;" />
+        </el-link>
         <div class="Home">
           <el-link href="/" :underline="false" class="nav_link">
             <el-icon class="elicon" :size="18" style="margin-top: -1px">
@@ -165,22 +150,6 @@ onUnmounted(() => {
         <div class="nav_item">
           <el-link :underline="false">
             <other />
-          </el-link>
-        </div>
-        <div class="Home">
-          <el-link href="/Friendchains" :underline="false">
-            <el-icon class="elicon" :size="18" style="margin-top: -1px">
-              <Paperclip />
-            </el-icon>
-            <span class="text">友链</span>
-          </el-link>
-        </div>
-        <div class="Home">
-          <el-link href="/photoa" :underline="false">
-            <el-icon class="elicon" :size="18" style="margin-top: -1px">
-              <UserFilled />
-            </el-icon>
-            <span class="text">相册</span>
           </el-link>
         </div>
         <div class="Home">
@@ -214,12 +183,6 @@ onUnmounted(() => {
                       <User />
                     </el-icon>
                     <span>个人中心</span>
-                  </el-dropdown-item>
-                  <el-dropdown-item command="settings">
-                    <el-icon>
-                      <Setting />
-                    </el-icon>
-                    <span>设置</span>
                   </el-dropdown-item>
                   <el-dropdown-item divided command="logout">
                     <el-icon>
@@ -328,18 +291,6 @@ onUnmounted(() => {
               <User />
             </el-icon>
             <span>个人中心</span>
-          </el-menu-item>
-          <el-menu-item @click="navigateTo('/user/articles')">
-            <el-icon>
-              <Document />
-            </el-icon>
-            <span>我的文章</span>
-          </el-menu-item>
-          <el-menu-item @click="navigateTo('/user/settings')">
-            <el-icon>
-              <Setting />
-            </el-icon>
-            <span>设置</span>
           </el-menu-item>
           <el-divider />
           <el-menu-item @click="logout">

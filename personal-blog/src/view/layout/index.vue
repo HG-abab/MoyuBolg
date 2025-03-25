@@ -12,7 +12,6 @@
 
 <script setup>
   import Header from '../../components/header/index.vue'
-  import Foter from '../../components/Foter/index.vue'
   import BRightLayout from '../../components/BRightLayout/index.vue'
 </script>
 

@@ -4,12 +4,15 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from './entities/user.entity'
 import { isCheckedUserDto, UserDto } from './dto/user.dto'
+import { Article } from 'src/article/entities/article.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Article)
+    private readonly articleRepository: Repository<Article>,
   ) { }
 
   findAll(): Promise<User[]> {
@@ -52,6 +55,12 @@ export class UsersService {
     })
     if (!user) {
       throw new BadGatewayException('用户不存在')
+    }
+    const username = await this.userRepository.findOne({
+      where: { name },
+    })
+    if (username) {
+      throw new BadGatewayException('用户名已存在')
     }
     await this.userRepository.update(id, {
       name,

@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cp-vuedir/core": "^0.3.3",
     "@element-plus/icons-vue": "^2.3.1",
     "axios": "^1.7.9",
     "chance": "^1.1.12",
@@ -28,7 +29,8 @@
     "vue-router": "^4.5.0",
     "vue3-emoji": "^3.0.2",
     "vue3-lazyload": "^0.3.8",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "year": "^0.2.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",

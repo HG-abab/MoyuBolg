@@ -485,6 +485,18 @@
     style-mod "^4.1.0"
     w3c-keyname "^2.2.4"
 
+"@cp-vuedir/core@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.npmmirror.com/@cp-vuedir/core/-/core-0.3.3.tgz"
+  integrity sha512-i0Bg5/+4edKtkK2DJAiwSwnZhjO3sSU2IsSBsBOXwFAES63udh0uGvwjuaJ/3Wq8Q7YA2hmLDtFR5PRIxEUnlg==
+  dependencies:
+    "@cp-vuedir/icons" "^0.1.7"
+
+"@cp-vuedir/icons@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.npmmirror.com/@cp-vuedir/icons/-/icons-0.1.7.tgz"
+  integrity sha512-jZXbaSrRTUAGiHZabwrF70TDIIU048sEY/VoMVzp//2FD+iG5ieYdOCAZvi5en++kC3y5Z7ohIinmJBi/jUGgQ==
+
 "@ctrl/tinycolor@^3.4.1":
   version "3.6.1"
   resolved "https://registry.npmmirror.com/@ctrl/tinycolor/-/tinycolor-3.6.1.tgz"
@@ -4069,7 +4081,7 @@ vue-router@^4.5.0:
   dependencies:
     "@vue/devtools-api" "^6.6.4"
 
-"vue@^2.0.0 || >=3.0.0", "vue@^2.7.0 || ^3.5.11", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", vue@^3.0.2, vue@^3.2.0, vue@^3.2.25, vue@^3.5.13, vue@^3.5.3, vue@>=3.0.1, "vue@2 || 3", vue@3.5.13:
+"vue@^2.0.0 || >=3.0.0", "vue@^2.7.0 || ^3.5.11", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", vue@^3.0.2, vue@^3.2.0, vue@^3.2.25, vue@^3.3.0, vue@^3.5.13, vue@^3.5.3, vue@>=3.0.1, "vue@2 || 3", vue@3.5.13:
   version "3.5.13"
   resolved "https://registry.npmmirror.com/vue/-/vue-3.5.13.tgz"
   integrity sha512-wmeiSMxkZCSc+PM2w2VRsOYAZC8GdipNFRTsLSfodVqI9mbejKeXEGr8SckuLnrQPGe3oJN5c3K0vpoU9q/wCQ==
@@ -4179,3 +4191,8 @@ yallist@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmmirror.com/yallist/-/yallist-4.0.0.tgz"
   integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
+
+year@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.npmmirror.com/year/-/year-0.2.1.tgz"
+  integrity sha512-9GnJUZ0QM4OgXuOzsKNzTJ5EOkums1Xc+3YQXp+Q+UxFjf7zLucp9dQ8QMIft0Szs1E1hUiXFim1OYfEKFq97w==

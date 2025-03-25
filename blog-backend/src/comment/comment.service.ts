@@ -5,6 +5,7 @@ import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { CreateCommentDto, DeleteCommentDto, IsCommentCheckDto, SearchCommentByTypeIdDto, SearchCommentDto } from './dto/comment.dto';
 import { Article } from 'src/article/entities/article.entity';
 import { Message } from 'src/message/entities/message.entity'
+import { User } from 'src/users/entities/user.entity';
 
 
 @Injectable()
@@ -13,6 +14,7 @@ export class CommentService {
     @InjectRepository(Comment) private readonly commentRepository: Repository<Comment>,
     @InjectRepository(Article) private readonly articleRepository: Repository<Article>,
     @InjectRepository(Message) private readonly messageRepository: Repository<Message>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) { }
 
   // 获取
@@ -58,6 +60,11 @@ export class CommentService {
       const article = await this.articleRepository.findOne({ where: { id: typeId } });
       if (!article) {
         throw new NotFoundException('Article not found');
+      }
+      const user = await this.userRepository.findOne({ where: { name: article.userName } });
+      if (user) {
+        user.commentCount += 1;
+        await this.userRepository.save(user);
       }
       article.commentsCount += 1;
       await this.articleRepository.save(article);
@@ -126,6 +133,11 @@ export class CommentService {
     if (type === 1) {
       const article = await this.articleRepository.findOne({ where: { id: typeId } });
       if (article) {
+        const user = await this.userRepository.findOne({ where: { name: article.userName } });
+        if (user) {
+          user.commentCount -= 1;
+          await this.userRepository.save(user);
+        }
         article.commentsCount -= totalDeletedComments;
         await this.articleRepository.save(article);
       }
