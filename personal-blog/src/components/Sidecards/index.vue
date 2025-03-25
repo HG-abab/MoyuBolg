@@ -65,7 +65,7 @@
 <style lang="scss" scoped>
 .card {
   background-color: var(--mao-bg-content);
-  height: 150px;
+  height: auto;
   border: 1px solid var(--el-border-color);
   border-radius: 5px;
   margin-top: 0.8em;

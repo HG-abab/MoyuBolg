@@ -129,24 +129,15 @@ export class ArticleService {
 
       // 如果分类变化，更新分类的 articleCount
       if (originalCategoryName !== categoryName) {
+        console.log('分类变化');
         const category = await this.categoryRepository.findOne({ where: { categoryName: originalCategoryName } });
         if (category) {
-          const user = await this.userRepository.findOne({ where: { name: userName } });
-          if (user) {
-            user.categoryCount -= 1;
-            await this.userRepository.save(user);
-          }
           category.articleCount -= 1;  // 原分类减去 1
           await this.categoryRepository.save(category);
         }
 
         const newCategory = await this.categoryRepository.findOne({ where: { categoryName: categoryName } });
         if (newCategory) {
-          const user = await this.userRepository.findOne({ where: { name: userName } });
-          if (user) {
-            user.categoryCount += 1;
-            await this.userRepository.save(user);
-          }
           newCategory.articleCount += 1;  // 新分类加 1
           await this.categoryRepository.save(newCategory);
         }
@@ -196,10 +187,11 @@ export class ArticleService {
       });
       const newId = maxId ? maxId.id + 1 : 1;
 
-      // 用户表文章 +1
+      // 用户表文章 +1 分类+1
       const user = await this.userRepository.findOne({ where: { name: userName } });
       if (user) {
         user.articleCount += 1;
+        user.categoryCount += 1;
         await this.userRepository.save(user);
       }
 
@@ -267,17 +259,20 @@ export class ArticleService {
     // 更新分类表中的 articleCount
     const category = await this.categoryRepository.findOne({ where: { categoryName } });
     if (category) {
-      const user = await this.userRepository.findOne({ where: { name:article.userName } });
-      if (user) {
-        user.categoryCount -= 1;
-        await this.userRepository.save(user);
-      }
       category.articleCount -= 1;
       if (category.articleCount < 0) {
         category.articleCount = 0;
       }
       await this.categoryRepository.save(category);
     }
+
+    // 用户表文章 -1 分类-1
+      const user = await this.userRepository.findOne({ where: { name: article.userName } });
+      if (user) {
+        user.articleCount -= 1;
+        user.categoryCount -= 1;
+        await this.userRepository.save(user);
+      }
 
     // 更新标签表中的 articleCount
     for (const tagName of tagsName) {

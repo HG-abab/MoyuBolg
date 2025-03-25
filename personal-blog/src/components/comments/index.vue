@@ -70,8 +70,8 @@
       return
     }
     await addComment({
-      Avatar: userStore.userAvatar,
-      commentUserName: userStore.userName,
+      Avatar: userStore.useravatar,
+      commentUserName: userStore.username,
       type: props.type,
       typeId: props.typeId,
       commentContent: textinput.value,

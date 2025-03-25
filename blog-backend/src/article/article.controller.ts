@@ -49,13 +49,13 @@ export class ArticleController {
 
   @Post('/addActicle')
   @UseGuards(AuthGuard)
-  async addArticle(@Body() CreateArticleDto: CreateArticleDto, req: { user: UserInfo }): Promise<Article> {
+  async addArticle(@Body() CreateArticleDto: CreateArticleDto, @Request() req: { user: UserInfo }): Promise<Article> {
     return this.articleService.addArticle(CreateArticleDto, req.user)
   }
 
 
   // 删除指定文章
-  @Delete('/deleteArticle')
+  @Delete('/deleteArticle/:id')
   @UseGuards(AuthGuard)
   async deleteArticle(@Param('id') id: number, @Request() req: { user: UserInfo }): Promise<Article> {
     return this.articleService.deleteArticle(id, req.user)
@@ -86,7 +86,7 @@ export class ArticleController {
   // 更新置顶状态
   @Put('/updateArticleTop')
   @UseGuards(AuthGuard)
-  async updateArticleTop(@Body() UpdateArticleTopDto: UpdateArticleTopDto, @Request()req: { user: UserInfo }): Promise<Article> {
+  async updateArticleTop(@Body() UpdateArticleTopDto: UpdateArticleTopDto, @Request() req: { user: UserInfo }): Promise<Article> {
     return this.articleService.updateArticleIsTop(UpdateArticleTopDto, req.user)
   }
 

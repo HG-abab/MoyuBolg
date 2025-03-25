@@ -160,7 +160,7 @@
   const getlikeandcollect = async () => {
     await getIsLike({
       articleId: Number(route.params.id),
-      userName: userStore.userName
+      userName: userStore.username
     }).then(res => {
       if (res.code === 0) {
         like.value = res.data
@@ -168,7 +168,7 @@
     })
     await getIsCollect({
       articleId: Number(route.params.id),
-      userName: userStore.userName
+      userName: userStore.username
     }).then(res => {
       if (res.code === 0) {
         collection.value = res.data
@@ -177,10 +177,10 @@
   }
 
   // 点赞
-  const likeArticle = async () => {
+const likeArticle = async () => {
     await isLike({
       articleId: Number(route.params.id),
-      userName: userStore.userName
+      userName: userStore.username
     }).then(res => {
       if (like.value === false) {
         ElMessage.success('点赞成功')
@@ -196,7 +196,7 @@
   const collectArticle = async () => {
     await isCollect({
       articleId: Number(route.params.id),
-      userName: userStore.userName
+      userName: userStore.username
     }).then(res => {
       if (collection.value === false) {
         ElMessage.success('收藏成功')

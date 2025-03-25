@@ -74,6 +74,11 @@ export class CommentService {
       if (!message) {
         throw new NotFoundException('Message not found');
       }
+      const user = await this.userRepository.findOne({ where: { name: comment.commentUserName } });
+      if (user) {
+        user.commentCount += 1;
+        await this.userRepository.save(user);
+      }
       message.commentsCount += 1;
       await this.messageRepository.save(message);
     }
@@ -144,6 +149,11 @@ export class CommentService {
     } else {
       const message = await this.messageRepository.findOne({ where: { id: typeId } });
       if (message) {
+        const user = await this.userRepository.findOne({ where: { name: comment.commentUserName } });
+        if (user) {
+          user.commentCount -= 1;
+          await this.userRepository.save(user);
+        }
         message.commentsCount -= totalDeletedComments;
         await this.messageRepository.save(message);
       }

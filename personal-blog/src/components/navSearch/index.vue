@@ -30,7 +30,7 @@
   const checktagList = ref([])
   const getchecktagList = async () => {
     await getSearchHistory({
-      userName: userStore.userName
+      userName: userStore.username
     }).then(res => {
       if (res.code === 0) {
         checktagList.value = res.data
@@ -41,7 +41,7 @@
   }
   const deleteHistory = async () => {
     await deleteSearchHistory({
-      userName: userStore.userName
+      userName: userStore.username
     }).then(async res => {
       if (res.code === 0) {
         ElMessage.success('清除成功')
@@ -100,7 +100,7 @@
     await getArticleBySearch({
       type,
       Content: input.value,
-      userName: userStore.userName
+      userName: userStore.username
     }).then(async res => {
       if (res.code === 0) {
         searchList.value = res.data
