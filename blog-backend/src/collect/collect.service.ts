@@ -23,6 +23,15 @@ export class CollectService {
     }
   }
 
+  // 通过名字获取收藏表
+  async getCollectByName(userName: string): Promise<Collect[]> {
+    const user = await this.collectRepository.find({ where: { userName } })
+    if(!user) {
+      throw new NotFoundException('用户不存在')
+    }
+    return user
+  }
+
   // 创建收藏
   async createCollect(createCollectDto: CreateCollectDto): Promise<Collect> {
     const { type, targetId, userName } = createCollectDto;
@@ -71,6 +80,7 @@ export class CollectService {
     return await this.collectRepository.save(collect);
   }
 
+
   // 是否通过
   async isCheck(IsisCheckDto: IsisCheckDto): Promise<Collect> {
     const { id, isCheck } = IsisCheckDto;
@@ -86,9 +96,10 @@ export class CollectService {
   }
 
   // 删除
-  async deleteCollect(id: number): Promise<Collect> {
+  async deleteCollect(createCollectDto: CreateCollectDto): Promise<Collect> {
+    const { type, targetId, userName } = createCollectDto;
     const collect = await this.collectRepository.findOne({
-      where: { id },
+      where: { type, targetId, userName },
     })
     if (!collect) {
       throw new NotFoundException('该收藏不存在');

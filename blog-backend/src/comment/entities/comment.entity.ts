@@ -14,6 +14,10 @@ export class Comment {
   @Column('text')
   Avatar: string;
 
+  // 评论的标题
+  @Column({ type: 'text', charset: 'utf8mb4' })
+  commentTitle: string;
+
   // 评论数量
   @Column({ default: 0 })
   commentCount: number;

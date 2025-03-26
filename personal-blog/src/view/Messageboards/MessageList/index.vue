@@ -62,8 +62,8 @@
       return
     } else {
       await createMessage({
-        userName: userStore.userName,
-        avatar: userStore.userAvatar,
+        userName: userStore.username,
+        avatar: userStore.useravatar,
         content: text.value
       }).then(res => {
         if (res.code === 0) {

@@ -32,8 +32,8 @@
     }
 
     await createTreeHole({
-      userName: userStore.userName,
-      avatar: userStore.userAvatar,
+      userName: userStore.username,
+      avatar: userStore.useravatar,
       content: content.value
     }).then((res) => {
       if (res.code === 0) {

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { Comment } from './entities/comment.entity';
 import { CreateCommentDto, DeleteCommentDto, IsCommentCheckDto, SearchCommentByTypeIdDto, SearchCommentDto } from './dto/comment.dto';
@@ -12,6 +12,12 @@ export class CommentController {
   @Get()
   async getComment(): Promise<Comment[]> {
     return this.commentService.getCommentList()
+  }
+
+  // 通过用户名获取
+  @Get('/:id')
+  async getCommentById(@Param('id') id: string): Promise<Comment[]> {
+    return this.commentService.getCommentListByUserName(id)
   }
 
   // 获取评论数

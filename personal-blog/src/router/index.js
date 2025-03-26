@@ -38,21 +38,6 @@ const routes = [
         component: () => import('../view/Concerning/index.vue'),
       },
       {
-        path: '/Friendchains',
-        name: 'Friendchains',
-        component: () => import('../view/Friendchains/index.vue'),
-      },
-      {
-        path: '/photoa',
-        name: 'photoa',
-        component: () => import('../view/photoa/index.vue'),
-      },
-      {
-        path: '/user',
-        name: 'user',
-        component: () => import('../view/user/Profile.vue'),
-      },
-      {
         path: 'Message',
         name: 'Message',
         component: () => import('../view/Messageboards/index.vue'),
@@ -93,6 +78,11 @@ const routes = [
     name: 'reset',
     component: () => import('../view/RequestPassword/index.vue'),
     
+  },
+  {
+        path: '/user',
+        name: 'user',
+        component: () => import('../view/user/Profile.vue'),
   },
   // 重定向
   {

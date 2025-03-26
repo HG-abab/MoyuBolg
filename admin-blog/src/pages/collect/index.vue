@@ -1,206 +1,195 @@
 <script setup>
-  import { ref, reactive, computed, onMounted } from 'vue';
-  import { createVNode } from 'vue';
-  import 'md-editor-v3/lib/style.css';
-  import { MdPreview } from 'md-editor-v3';
-  import { Modal, message } from 'ant-design-vue';
-  import { ExclamationCircleOutlined, MessageOutlined, DeleteOutlined } from '@ant-design/icons-vue';
-  import dayjs from 'dayjs';
-  import { getCollectList, isCollectCheck, delCollectId, searchCollect } from '../../api/collect'
+import { ref, reactive, computed, onMounted } from 'vue';
+import { createVNode } from 'vue';
+import 'md-editor-v3/lib/style.css';
+import { MdPreview } from 'md-editor-v3';
+import { Modal, message } from 'ant-design-vue';
+import { ExclamationCircleOutlined, MessageOutlined, DeleteOutlined } from '@ant-design/icons-vue';
+import dayjs from 'dayjs';
+import { getCollectList, isCollectCheck, delCollectId, searchCollect } from '../../api/collect'
 
-  // 模拟数据
-  const mockFavoriteData = ref([
-    {
-      id: '1',
-      userName: '用户1',
-      type: 1,
-      content: '这是一篇关于Vue 3的文章。',
-      isCheck: true,
-      createTime: '2023-10-01 12:00:00',
-      updateTime: '2023-10-02 12:00:00',
-    },
-    {
-      id: '2',
-      userName: '用户2',
-      type: 2,
-      content: '这是一条留言内容。',
-      isCheck: false,
-      createTime: '2023-10-01 12:00:00',
-      updateTime: '2023-10-02 12:00:00',
-    },
-  ]);
+const formData = reactive({
+  userName: undefined,
+  isCheck: undefined,
+  type: undefined,
+  time: undefined,
+});
 
-  const formData = reactive({
-    userName: undefined,
-    isCheck: undefined,
-    type: undefined,
-    time: undefined,
-  });
+onMounted(async () => {
+  await refreshFunc();
+});
 
-  onMounted(async () => {
-    await refreshFunc();
-  });
+const state = reactive({
+  selectedRowKeys: [], // 选中的行
+  loading: false,
+});
 
-  const state = reactive({
-    selectedRowKeys: [], // 选中的行
-    loading: false,
-  });
+const loading = ref(false);
+const tabData = ref([]);
 
-  const loading = ref(false);
-  const tabData = ref([]);
+/**
+ * 选中表格
+ */
+function onSelectChange(selectedRowKeys) {
+  state.selectedRowKeys = selectedRowKeys;
+}
 
-  /**
-   * 选中表格
-   */
-  function onSelectChange(selectedRowKeys) {
-    state.selectedRowKeys = selectedRowKeys;
-  }
+const columns = [
+  {
+    title: '编号',
+    dataIndex: 'id',
+    align: 'center',
+  },
+  {
+    title: '用户名称',
+    dataIndex: 'userName',
+    align: 'center',
+  },
+  {
+    title: '收藏类型',
+    dataIndex: 'type',
+    align: 'center',
+  },
+  {
+    title: '收藏内容',
+    dataIndex: 'content',
+    align: 'center',
+  },
+  {
+    title: '是否有效',
+    dataIndex: 'isCheck',
+    align: 'center',
+  },
+  {
+    title: '收藏时间',
+    dataIndex: 'createTime',
+    align: 'center',
+  },
+  {
+    title: '操作',
+    dataIndex: 'operation',
+    align: 'center',
+  },
+];
 
-  const columns = [
-    {
-      title: '编号',
-      dataIndex: 'id',
-      align: 'center',
-    },
-    {
-      title: '用户名称',
-      dataIndex: 'userName',
-      align: 'center',
-    },
-    {
-      title: '收藏类型',
-      dataIndex: 'type',
-      align: 'center',
-    },
-    {
-      title: '收藏内容',
-      dataIndex: 'content',
-      align: 'center',
-    },
-    {
-      title: '是否有效',
-      dataIndex: 'isCheck',
-      align: 'center',
-    },
-    {
-      title: '收藏时间',
-      dataIndex: 'createTime',
-      align: 'center',
-    },
-    {
-      title: '操作',
-      dataIndex: 'operation',
-      align: 'center',
-    },
-  ];
+async function refreshFunc() {
+  loading.value = true;
+  await getCollectList().then((res) => {
+    if (res.code === 0) {
+      tabData.value = res.data;
+      tabData.value.forEach((item) => {
+        item.createTime = dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss');
+      })
+      console.log(tabData.value);
+    } else {
+      message.error(res.msg)
+    }
+  })
+  loading.value = false;
+}
 
-  async function refreshFunc() {
-    loading.value = true;
-    await getCollectList().then((res) => {
-      if (res.code === 0) {
-        tabData.value = res.data;
-        tabData.value.forEach((item) => {
-          item.createTime = dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss');
-        })
-      } else {
-        message.error(res.msg)
-      }
-    })
-    loading.value = false;
-  }
+async function onFinish(values) {
+  loading.value = true;
+  const submitData = {
+    ...values,
+    isCheck: values.isCheck !== undefined ? (values.isCheck === 1) : undefined,
+    startTime: values.time && values.time.length > 0 ? dayjs(values.time[0]).format('YYYY-MM-DD HH:mm:ss') : undefined,
+    endTime: values.time && values.time.length > 0 ? dayjs(values.time[1]).format('YYYY-MM-DD HH:mm:ss') : undefined,
+  };
 
-  async function onFinish(values) {
-    loading.value = true;
-    const submitData = {
-      ...values,
-      isCheck: values.isCheck !== undefined ? (values.isCheck === 1) : undefined,
-      startTime: values.time && values.time.length > 0 ? dayjs(values.time[0]).format('YYYY-MM-DD HH:mm:ss') : undefined,
-      endTime: values.time && values.time.length > 0 ? dayjs(values.time[1]).format('YYYY-MM-DD HH:mm:ss') : undefined,
-    };
-
-    await searchCollect(submitData).then((res) => {
-      if (res.code === 0) {
-        console.log(res.data)
-        tabData.value = res.data;
-        tabData.value.forEach((item) => {
-          item.createTime = dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss');
-        })
-      } else {
-        message.error(res.msg)
-      }
-    })
-
-
-    loading.value = false;
-  }
-
-  // 是否通过
-  async function updateIsCheckFunc(id, isCheck, record) {
-    record.isCheckloading = true;
-    await isCollectCheck({
-      id,
-      isCheck,
-    }).then(async (res) => {
-      if (res.code === 0) {
-        await refreshFunc();
-        message.success('操作成功');
-      } else {
-        message.error(res.msg);
-      }
-    })
-    record.isCheckloading = false;
-  }
-
-  // 删除文章
-  async function onDelete(ids) {
-    if (ids) {
-      ids.forEach(async (id) => {
-        await delCollectId(id).then(async (res) => {
-          if (res.code === 0) {
-            message.success('删除成功');
-            await refreshFunc();
-          } else {
-            message.error(res.msg);
-          }
-        })
+  await searchCollect(submitData).then((res) => {
+    if (res.code === 0) {
+      console.log(res.data)
+      tabData.value = res.data;
+      tabData.value.forEach((item) => {
+        item.createTime = dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss');
       })
     } else {
-      // 批量删除
-      const ids = state.selectedRowKeys;
-      Modal.confirm({
-        title: '注意',
-        icon: createVNode(ExclamationCircleOutlined),
-        content: `确定删除编号为 【${ids.join(',')}】 的收藏吗？`,
-        okText: '确认',
-        cancelText: '取消',
-        onOk: () => {
-          ids.forEach(async (id) => {
-            await delCollectId(id).then(async (res) => {
-              if (res.code === 0) {
-                message.success('删除成功');
-                await refreshFunc();
-              } else {
-                message.error(res.msg);
-              }
-            })
-          })
-        },
-      });
+      message.error(res.msg)
     }
+  })
+
+
+  loading.value = false;
+}
+
+// 是否通过
+async function updateIsCheckFunc(id, isCheck, record) {
+  record.isCheckloading = true;
+  await isCollectCheck({
+    id,
+    isCheck,
+  }).then(async (res) => {
+    if (res.code === 0) {
+      await refreshFunc();
+      message.success('操作成功');
+    } else {
+      message.error(res.msg);
+    }
+  })
+  record.isCheckloading = false;
+}
+
+
+// 删除文章
+async function onDelete(ids) {
+  if (ids) {
+    console.log(ids)
+    ids.forEach(async (id) => {
+      await delCollectId({
+        type: tabData.value[id - 1].type,
+        targetId: tabData.value[id - 1].targetId,
+        userName: tabData.value[id - 1].userName,
+      }).then(async (res) => {
+        if (res.code === 0) {
+          message.success('删除成功');
+          await refreshFunc();
+        } else {
+          message.error(res.msg);
+        }
+      })
+    })
+  } else {
+    // 批量删除
+    const ids = state.selectedRowKeys;
+    Modal.confirm({
+      title: '注意',
+      icon: createVNode(ExclamationCircleOutlined),
+      content: `确定删除编号为 【${ids.join(',')}】 的收藏吗？`,
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        ids.forEach(async (id) => {
+          await delCollectId({
+            type: tabData.value[id - 1].type,
+            targetId: tabData.value[id - 1].targetId,
+            userName: tabData.value[id - 1].userName,
+          }).then(async (res) => {
+            if (res.code === 0) {
+              message.success('删除成功');
+              await refreshFunc();
+            } else {
+              message.error(res.msg);
+            }
+          })
+        })
+      },
+    });
   }
+}
 
-  const contentModel = reactive({
-    show: false,
-    content: '',
-  });
+const contentModel = reactive({
+  show: false,
+  content: '',
+});
 
-  // 查看
-  function viewFunc(id) {
-    if (!id) id = state.selectedRowKeys[0];
+// 查看
+function viewFunc(id) {
+  if (!id) id = state.selectedRowKeys[0];
 
-    contentModel.show = true;
-    contentModel.content = tabData.value.find((item) => item.id === id)?.content || '';
-  }
+  contentModel.show = true;
+  contentModel.content = tabData.value.find((item) => item.id === id)?.content || '';
+}
 </script>
 
 <template>
@@ -241,7 +230,8 @@
         </a-form-item>
       </template>
       <template #operate-btn>
-        <a-button type="default" style="margin-right: 10px" :disabled="state.selectedRowKeys.length !== 1" @click="viewFunc()">
+        <a-button type="default" style="margin-right: 10px" :disabled="state.selectedRowKeys.length !== 1"
+                  @click="viewFunc()">
           <template #icon>
             <MessageOutlined />
           </template>
@@ -269,10 +259,14 @@
         </a-modal>
       </template>
       <template #table-content>
-        <a-table :columns="columns" :data-source="tabData" :loading="loading" :row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }" :row-key="record => record.id" size="small">
+        <a-table :columns="columns" :data-source="tabData" :loading="loading"
+                 :row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }"
+                 :row-key="record => record.id" size="small">
           <template #bodyCell="{ column, record }">
             <template v-if="column.dataIndex === 'isCheck'">
-              <a-switch v-model:checked="record.isCheck" checked-children="是" un-checked-children="否" :loading="record.isCheckloading" @change="updateIsCheckFunc(record.id, record.isCheck, record)" />
+              <a-switch v-model:checked="record.isCheck" checked-children="是" un-checked-children="否"
+                        :loading="record.isCheckloading"
+                        @change="updateIsCheckFunc(record.id, record.isCheck, record)" />
             </template>
             <template v-if="column.dataIndex === 'type'">
               <a-tag color="blue">
@@ -314,13 +308,15 @@
 </template>
 
 <style lang="scss" scoped>
-.collect{
+.collect {
   background: white;
   min-height: 50vh;
   margin-bottom: 5rem;
+
   .crumbs {
     padding: 1rem;
-    h1{
+
+    h1 {
       margin-top: 1rem;
       font-size: 1.2rem;
       font-weight: 500;
@@ -328,11 +324,11 @@
   }
 }
 
-:deep(.ant-select-arrow){
+:deep(.ant-select-arrow) {
   padding-top: 0.8rem;
 }
 
-:deep(.ant-picker-suffix){
+:deep(.ant-picker-suffix) {
   padding-top: 0.45rem;
 }
 </style>

@@ -21,6 +21,10 @@ export class CreateCommentDto {
   @IsNotEmpty()
   commentUserName: string; // 评论者的用户名
 
+  @IsString()
+  @IsNotEmpty()
+  commentTitle: string; // 评论标题
+
   @IsOptional()
   @IsNumber()
   parentId?: number; // 父评论 ID，如果是子评论就传 parentId

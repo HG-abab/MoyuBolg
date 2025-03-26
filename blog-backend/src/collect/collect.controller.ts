@@ -18,6 +18,12 @@ export class CollectController {
     return await this.collectService.getCollectList(id);
   }
 
+  // 通过名字获取收藏表
+  @Get('search/:userName')
+  async getCollectByName(@Param('userName') userName: string): Promise<Collect[]> {
+    return await this.collectService.getCollectByName(userName);
+  }
+
   // 创建
   @Post('create')
   async createCollect(@Body() CreateCollectDto: CreateCollectDto): Promise<Collect> {
@@ -32,10 +38,9 @@ export class CollectController {
   }
 
   // 删除
-  @Delete('/delete/:id')
-  @UseGuards(AuthGuard)
-  async deleteCollect(@Param('id') id: number): Promise<Collect> {
-    return await this.collectService.deleteCollect(id);
+  @Delete('/delete')
+  async deleteCollect(@Body() createCollectDto: CreateCollectDto): Promise<Collect> {
+    return await this.collectService.deleteCollect(createCollectDto);
   }
 
   // 搜索

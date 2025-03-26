@@ -2,8 +2,7 @@
 import { onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import { User, Close, Paperclip, UserFilled, Headset, Tools, Setting, SwitchButton, Document } from '@element-plus/icons-vue'
 import { HomeFilled } from '@element-plus/icons-vue'
-import pigeOnhole from './nav-item/nav-item-pigeonhole.vue'
-import other from './nav-item/nav-item-other.vue'
+
 import DayNightToggleButton from '../DayNightToggle/index'
 import { useColorMode } from '@vueuse/core'
 import navSearch from '../navSearch/index.vue'
@@ -103,6 +102,11 @@ const loginDialogVisible = () => {
   router.push('/login')
 }
 
+// 个人中心
+const openUserDrawer = () => {
+  router.push('/user')
+}
+
 onMounted(() => {
   window.addEventListener('wheel', handleWheelEvent);
 });
@@ -142,23 +146,47 @@ onUnmounted(() => {
             <span class="text">首页</span>
           </el-link>
         </div>
-        <div class="nav_item">
-          <el-link :underline="false">
-            <pigeOnhole />
-          </el-link>
-        </div>
-        <div class="nav_item">
-          <el-link :underline="false">
-            <other />
+        <div class="Home">
+          <el-link href="/category" :underline="false" class="nav_link">
+            <el-icon class="elicon" :size="18" style="margin-top: -1px">
+              <CopyDocument />
+            </el-icon>
+            <span class="text">分类</span>
           </el-link>
         </div>
         <div class="Home">
-          <el-link href="/concerning" :underline="false">
+          <el-link href="/tabs" :underline="false" class="nav_link">
             <el-icon class="elicon" :size="18" style="margin-top: -1px">
-              <Tools />
+              <Discount />
             </el-icon>
-            <span class="text">关于</span>
+            <span class="text">标签</span>
           </el-link>
+        </div>
+        <div class="Home">
+          <el-link href="/Timeline" :underline="false" class="nav_link">
+            <el-icon class="elicon" :size="18" style="margin-top: -1px">
+              <Clock />
+            </el-icon>
+            <span class="text">时间轴</span>
+          </el-link>
+        </div>
+        <div class="Home">
+          <el-link href="/treeHoles" :underline="false" class="nav_link">
+            <el-icon class="elicon" :size="18" style="margin-top: -1px">
+              <Fries />
+            </el-icon>
+            <span class="text">树洞</span>
+          </el-link>
+        </div>
+        <div class="Home">
+          <el-link href="/Message" :underline="false" class="nav_link">
+            <el-icon class="elicon" :size="18" style="margin-top: -1px">
+              <EditPen />
+            </el-icon>
+            <span class="text">留言板</span>
+          </el-link>
+        </div>
+        <div class="Home">
         </div>
       </div>
       <div class="right">
@@ -179,10 +207,12 @@ onUnmounted(() => {
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item command="profile">
-                    <el-icon>
-                      <User />
-                    </el-icon>
-                    <span>个人中心</span>
+                    <div @click="openUserDrawer">
+                      <el-icon>
+                        <User />
+                      </el-icon>
+                      <span>个人中心</span>
+                    </div>
                   </el-dropdown-item>
                   <el-dropdown-item divided command="logout">
                     <el-icon>
@@ -273,7 +303,7 @@ onUnmounted(() => {
   <!-- 移动端用户菜单 -->
   <el-drawer v-model="userDrawer" :with-header="true" size="40%" direction="rtl" :show-close="false">
     <template #header>
-      <span style="font-size: 1.2rem">用户中心</span>
+      <span @click="openUserDrawer" style="font-size: 1.2rem">用户中心</span>
       <el-button :icon="Close" style="background: none;font-size: 1.5rem;width: 30px;border: none"
                  @click="userDrawer = false" />
     </template>

@@ -8,7 +8,7 @@ export const getCollectList = (id) => request.get(`/collect/${id}`)
 export const isCollectCheck = (data) => request.put('/collect/update', data)
 
 //  删除收藏
-export const delCollectId = (id) => request.delete(`/collect/delete/${id}`)
+export const delCollectId = (data) => request.delete(`/collect/delete`,{data})
 
 // 搜索
 export const searchCollect = (data) => request.post('/collect/search', data)

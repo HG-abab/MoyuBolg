@@ -29,6 +29,12 @@ export class ArticleController {
     return this.articleService.findArticleByTagName();
   }
 
+  // 根据作者返回文章列表
+  @Get('userName/:userName')
+  async findArticleByUserName(@Param('userName') userName: string): Promise<Article[]> {
+    return this.articleService.findArticleByAuthor(userName);
+  }
+
   // 查询置顶文章
   @Get('/getTopArticle')
   async getTopArticle(): Promise<Article[]> {

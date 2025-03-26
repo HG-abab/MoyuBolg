@@ -22,9 +22,18 @@ export class CommentService {
     return await this.commentRepository.find();
   }
 
+  // 通过用户名获取
+  async getCommentListByUserName(userName: string): Promise<Comment[]> {
+    const commentList = await this.commentRepository.find({ where: { commentUserName: userName } });
+    if (!commentList) {
+      throw new NotFoundException('没有找到评论');
+    }
+    return commentList;
+  }
+
   // 创建
   async createComment(createCommentDto: CreateCommentDto): Promise<Comment> {
-    const { type, typeId, commentContent, commentUserName, parentId, Avatar } = createCommentDto;
+    const { type, typeId, commentContent, commentUserName, parentId, Avatar, commentTitle } = createCommentDto;
 
     // 校验父评论（如果是子评论）
     if (parentId) {
@@ -48,6 +57,7 @@ export class CommentService {
       Avatar,
       typeId,
       commentContent,
+      commentTitle,
       commentUserName,
       createTime: new Date(),
       isCheck: false,

@@ -17,7 +17,7 @@ export class Collect {
   @Column('text')
   content: string;
 
-  @Column({ default: false })
+  @Column({ default: true })
   isCheck: boolean
 
   @Column()

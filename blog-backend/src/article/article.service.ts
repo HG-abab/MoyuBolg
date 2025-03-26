@@ -45,6 +45,15 @@ export class ArticleService {
     return this.articleRepository.find(); // 返回所有文章
   }
 
+  // 根据作者返回文章列表
+  async findArticleByAuthor(userName: string): Promise<Article[]> {
+    const articles = await this.articleRepository.find({ where: { userName } });
+    if (!articles) {
+      throw new HttpException('文章不存在', HttpStatus.NOT_FOUND);
+    }
+    return articles;
+  }
+
   // 根据分类名返回文章列表
   async findArticleByCategoryName(): Promise<CategoryWithArticles[]> {
     const categorylist = await this.categoryRepository.find();
@@ -267,12 +276,12 @@ export class ArticleService {
     }
 
     // 用户表文章 -1 分类-1
-      const user = await this.userRepository.findOne({ where: { name: article.userName } });
-      if (user) {
-        user.articleCount -= 1;
-        user.categoryCount -= 1;
-        await this.userRepository.save(user);
-      }
+    const user = await this.userRepository.findOne({ where: { name: article.userName } });
+    if (user) {
+      user.articleCount -= 1;
+      user.categoryCount -= 1;
+      await this.userRepository.save(user);
+    }
 
     // 更新标签表中的 articleCount
     for (const tagName of tagsName) {

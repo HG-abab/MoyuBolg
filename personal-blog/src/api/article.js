@@ -5,6 +5,9 @@ export const getTopArticle = () => request.get('/article/getTopArticle')
 // 所有文章
 export const getAllArticle = (id) => request.get(`/article/${id}`)
 
+// 作者文章
+export const getuserNameArticle = (id) => request.get(`/article/userName/${id}`)
+
 // 获取上下文章title
 export const getAroundTitle = (id) => request.get(`/article/articleTitle/${id}`)
 
