@@ -49,14 +49,14 @@ export class User {
   isChecked: boolean
 
   // 文章数量
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   articleCount: number;
 
   // 分类数
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   categoryCount: number;
 
   // 评论数
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   commentCount: number;
 }

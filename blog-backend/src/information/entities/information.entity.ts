@@ -23,15 +23,15 @@ export class WebsiteInformation {
   @Column({ type: 'timestamp' })
   lastUpdateTime: Date; // 最近更新时间
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   articleCount: number; // 文章数量
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   wordCount: number; // 文章总字数
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   visitCount: number; // 访问次数
 
-  @Column({ length: 50 })
+  @Column({ length: 50, default: '0' })
   runTime: string; // 运行时间
 }
