@@ -1,5 +1,6 @@
 import request from '../utils/request'
 // 置顶文章
+// 导出一个函数，用于获取置顶文章
 export const getTopArticle = () => request.get('/article/getTopArticle')
 
 // 所有文章

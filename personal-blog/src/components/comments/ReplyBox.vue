@@ -5,6 +5,9 @@ import { ElMessage } from 'element-plus'
 import V3Emoji from 'vue3-emoji'
 import 'vue3-emoji/dist/style.css'
 import { addComment } from '@/api/comment'
+import { useUserStore } from '@/stores/User'
+
+const userStore = useUserStore()
 
 const props = defineProps({
   comment: {
@@ -39,9 +42,9 @@ const addChildComment = async (vlaues) => {
     return
   }
   await addComment({
-    Avatar: vlaues.Avatar,
+    Avatar: userStore.useravatar,
     commentTitle: vlaues.commentTitle,
-    commentUserName: vlaues.commentUserName,
+    commentUserName: userStore.username,
     type: vlaues.type,
     typeId: vlaues.typeId,
     commentContent: replyText.value,

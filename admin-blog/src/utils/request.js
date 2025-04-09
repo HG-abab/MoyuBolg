@@ -6,8 +6,8 @@ const userStore = useUserStore()
 
 // 创建axios实例
 const request = axios.create({
-  baseURL: 'http://localhost:3000/api', // 设置基础URL
-  timeout: 5000,  // 设置请求超时时间
+  baseURL: 'http://114.215.186.193:3000/api', // 设置基础URL
+  timeout: 5000 // 设置请求超时时间
 })
 
 // 错误处理函数，避免重复代码
@@ -55,7 +55,7 @@ request.interceptors.response.use(
     if (error.response) {
       const { status, data } = error.response
       console.error(`Error Status: ${status}`, data) // 打印错误状态
-      handleError(status, data.message)  // 使用封装的错误处理
+      handleError(status, data.message) // 使用封装的错误处理
     } else {
       message.error('网络错误，请检查网络')
     }

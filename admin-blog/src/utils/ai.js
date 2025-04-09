@@ -24,7 +24,7 @@ export function useAiStream() {
       isLoading.value = true;
       message.loading({ content: '正在处理中...', key: loadingKey, duration: 0 });
 
-      const response = await fetch(`http://localhost:3000/api/ai/${endpoint}`, {
+      const response = await fetch(`http://114.215.186.193:3000/api/ai/${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

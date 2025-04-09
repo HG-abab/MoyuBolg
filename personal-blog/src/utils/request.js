@@ -2,7 +2,7 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
 const request = axios.create({
-  baseURL: 'http://localhost:3000/api', // 设置基础URL
+  baseURL: 'http://114.215.186.193:3000/api' // 设置基础URL
 })
 
 // 请求拦截器

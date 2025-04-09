@@ -60,6 +60,7 @@ export class UsersService {
       where: { name },
     })
     if (username) {
+      if(username.id !== id)
       throw new BadGatewayException('用户名已存在')
     }
     await this.userRepository.update(id, {

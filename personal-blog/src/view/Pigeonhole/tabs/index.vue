@@ -1,5 +1,5 @@
 <script setup>
-  import containerbg from '@/assets/imgs/card03.jpg';
+  import containerbg from '@/assets/imgs/card05.jpg';
   import { onMounted, ref, watch } from 'vue';
   import Foter from '@/components/Foter/index.vue';
   import { useRoute, useRouter } from 'vue-router';

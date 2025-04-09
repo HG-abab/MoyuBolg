@@ -108,7 +108,7 @@ function resetInfo() {
   <div class="info">
     <a-form>
       <div class="avatar">
-        <a-upload v-model:file-list="avatarFileList" name="file" action="http://localhost:3000/api/upload"
+        <a-upload v-model:file-list="avatarFileList" name="file" action="http://114.215.186.193:3000/api/upload"
                   list-type="picture-card" class="avatar-uploader" :show-upload-list="false"
                   :before-upload="beforeUpload" @change="handleChangeAvatar">
           <img v-if="imageUrl" :src="imageUrl" alt="avatar">
@@ -131,7 +131,7 @@ function resetInfo() {
         <div>
           <a-upload v-model:file-list="backFileList" list-type="picture" name="file"
                     :show-upload-list="{ showRemoveIcon: false }" :before-upload="beforeUpload" :max-count="1"
-                    action="http://localhost:3000/api/upload" @change="handleChangeBack">
+                    action="http://114.215.186.193:3000/api/upload" @change="handleChangeBack">
             <div style="display: flex">
               <a-button>
                 <UploadOutlined />

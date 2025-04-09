@@ -33,10 +33,10 @@ import jwtConfig from '../jwt.config';  // 引入 jwt 配置
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: '114.215.186.193',
       port: 3306,
-      username: 'root',
-      password: '123456',
+      username: 'blog-backend',
+      password: 'M8E4FCF6CdLjN3Yt',
       database: 'blog-backend',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       charset: 'utf8mb4_general_ci',

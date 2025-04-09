@@ -23,7 +23,7 @@ export function useAiStream() {
     try {
       isLoading.value = true
 
-      const response = await fetch(`http://localhost:3000/api/ai/${endpoint}`, {
+      const response = await fetch(`http://114.215.186.193:3000/api/ai/${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

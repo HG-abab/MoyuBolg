@@ -1,5 +1,5 @@
 <script setup>
-  import containerbg from '@/assets/imgs/card03.jpg';
+  import containerbg from '@/assets/imgs/card05.jpg';
   import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
   import { getAllArticle } from '@/api/article';
   import dayjs from 'dayjs';

@@ -51,6 +51,9 @@ function decodeJWT(token) {
 }
 
 onMounted(() => {
+  if (!userStore.userToken) {
+    router.push('/login')
+  }
   const userId = decodeJWT(userStore.userToken).sub;
   getUserById(userId).then((res) => {
     if (res.code === 0) {

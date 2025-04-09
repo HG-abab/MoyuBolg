@@ -1,4 +1,5 @@
 <template>
+  <Header />
   <div class="profile-container">
     <!-- 个人中心页面头部 -->
     <div class="profile-header">
@@ -95,9 +96,9 @@
           <div class="favorites-list">
             <div v-for="favorite in favorites" :key="favorite.id" class="favorite-card">
               <div class="favorite-header">
-                <h3 v-if="favorite.type === 1" class="favorite-title">{{ Filtercontent(favorite.content,8) }}</h3>
+                <h3 v-if="favorite.type === 1" class="favorite-title">{{ Filtercontent(favorite.content, 8) }}</h3>
               </div>
-              <p  class="favorite-excerpt">{{ favorite.content }}</p>
+              <p class="favorite-excerpt">{{ favorite.content }}</p>
               <div class="favorite-footer">
                 <div class="favorite-author">
                   <el-avatar :size="24" :src="favorite.avatar"></el-avatar>
@@ -118,7 +119,8 @@
           <div class="comments-list">
             <div v-for="comment in userComments" :key="comment.id" class="comment-card">
               <div class="comment-article">
-                评论于：<router-link v-if="comment.type === 1" :to="`/article/${comment.typeId}`">{{ comment.commentTitle }}</router-link>
+                评论于：<router-link v-if="comment.type === 1" :to="`/article/${comment.typeId}`">{{ comment.commentTitle
+                  }}</router-link>
                 <router-link v-else :to="`/message/detail/${comment.typeId}`">{{ comment.commentTitle }}</router-link>
               </div>
               <div class="comment-content">{{ comment.commentContent }}</div>
@@ -143,6 +145,7 @@ import { getIsCollect, getuserNameArticle } from '../../api/article';
 import { getComment } from '../../api/comment'
 import dayjs from "dayjs";
 import { getCollect } from '../../api/collect';
+import Header from '../../components/header/index.vue';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -214,8 +217,8 @@ const viewArticle = (id) => {
 };
 
 // 收藏夹相关操作
-const viewFavorite = (id,type) => {
-  if (type === 1) { 
+const viewFavorite = (id, type) => {
+  if (type === 1) {
     router.push(`/article/${id}`);
   } else {
     router.push(`/message/detail/${id}`);
@@ -224,11 +227,11 @@ const viewFavorite = (id,type) => {
 
 
 const followUser = () => {
-  window.open('http://localhost:5173', '_blank');
+  window.open('http://114.215.186.193:8084', '_blank');
 }
 
 const createNewArticle = () => {
-  window.open('http://localhost:5173/publish', '_blank');
+  window.open('http://114.215.186.193:8084', '_blank');
 }
 </script>
 
