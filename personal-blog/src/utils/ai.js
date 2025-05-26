@@ -32,25 +32,32 @@ export function useAiStream() {
       })
 
       const reader = response.body.getReader()
+      // getReader() 返回一个 ReadableStreamDefaultReader 对象，用于读取流式数据。
       const decoder = new TextDecoder()
+      // TextDecoder 是一个用于解码 UTF-8 编码的文本的类。
       let buffer = ''
 
       while (true) {
         const { value, done } = await reader.read()
+        // read() 方法返回一个包含两个属性的 Promise 对象：value 和 done。
         if (done) break
 
         buffer += decoder.decode(value, { stream: true })
+        // decode() 方法用于将 UTF-8 编码的二进制数据解码为字符串。
         const lines = buffer.split('\n')
+        // split() 方法用于将字符串按指定分隔符分割成数组。
         buffer = lines.pop() || ''
-
+        // pop() 方法用于删除数组的最后一个元素，并返回该元素。
         for (const line of lines) {
           if (line.startsWith('data: ')) {
+            // startsWith() 方法用于检查字符串是否以指定的字符串开头。
             try {
               const data = JSON.parse(line.slice(6))
-
+              // slice() 方法用于提取字符串的一部分，并返回一个新的字符串。
               if (data.error) {
                 throw new Error(data.error)
               }
+              // JSON.parse() 方法用于将 JSON 字符串解析为 JavaScript 对象。
 
               if (data.done) {
                 if (options.onSuccess) {

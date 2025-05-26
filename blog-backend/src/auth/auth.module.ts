@@ -36,7 +36,8 @@ import { AuthGuard } from './auth.guard'
     HashingService,
     GiteeStrategy,
     GithubStrategy,
-    AuthGuard
+    AuthGuard,
+    GiteeStrategy
   ],
   exports: [JwtModule],
 })

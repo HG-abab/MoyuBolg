@@ -137,7 +137,6 @@ const handleForgotPassword = async () => {
           "email": forgotForm.email
         }).then((res) => {
           if (res.code === 0) {
-            console.log(res);
             ElMessage.success('邮件发送成功，请查收');
           } else {
             ElMessage.error(res.data.message);
@@ -183,11 +182,11 @@ const handleRegister = async () => {
 };
 
 const handleGithubLogin = () => {
-  window.location.href = 'http://localhost:3000/api/auth/github';
+  window.location.href = 'http://114.215.186.193/api/auth/github';
 };
 
 const handleGiteeLogin = () => {
-  window.location.href = 'http://localhost:3000/api/auth/gitee';
+  window.location.href = 'http://114.215.186.193/api/auth/gitee';
 };
 </script>
 

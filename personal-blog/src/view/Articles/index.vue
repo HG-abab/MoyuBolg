@@ -57,7 +57,6 @@ const calculateLastUpdate = (lastUpdateDate) => {
   const now = new Date();
   const diffInSeconds = Math.floor((now - lastUpdate) / 1000);
   const days = Math.floor(diffInSeconds / (3600 * 24));
-
   return `${days}天前`;
 };
 

@@ -10,8 +10,26 @@ const fullText = ref("");
 const currentText = ref("");
 const background = ref(null);
 const title = ref('');
+const isLoading = ref(true); // 添加loading状态
 let index = 0;
 let typingTimeout = null; // 用于存储当前定时器
+
+// 添加图片加载完成的处理函数
+const handleImageLoad = () => {
+  const totalImages = imageList.value.length;
+  let loadedImages = 0;
+
+  imageList.value.forEach(item => {
+    const img = new Image();
+    img.src = item.url;
+    img.onload = () => {
+      loadedImages++;
+      if (loadedImages === totalImages) {
+        isLoading.value = false;
+      }
+    };
+  });
+};
 
 const fetchData = async () => {
   try {
@@ -19,6 +37,7 @@ const fetchData = async () => {
 
     if (bgRes.code === 0) {
       imageList.value = bgRes.data;
+      handleImageLoad(); // 调用图片加载处理函数
     } else {
       ElMessage.error(bgRes.message);
     }
@@ -88,7 +107,11 @@ onUnmounted(() => {
 
 <template>
   <div>
-    <div>
+    <!-- 添加loading遮罩层 -->
+    <div v-if="isLoading" class="loading-overlay">
+      <img src="../../assets/imgs/loading-image.gif" alt="Loading..." class="loading-image" />
+    </div>
+    <div v-show="!isLoading">
       <div class="imgs">
         <div class="item" v-for="item in imageList" :key="item.id" :style="{
           'background-image': 'url(' + item.url + ')'
@@ -306,6 +329,24 @@ onUnmounted(() => {
 
   100% {
     opacity: 1;
+  }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--mao-bg-wave04);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+
+  .loading-image {
+    width: 100px;
+    height: 100px;
   }
 }
 </style>
