@@ -178,7 +178,7 @@ function toarticle(e) {
 <style lang="scss" scoped>
 .el-card {
   margin: 10px 0;
-  height: 220px;
+  height: 260px;
 
   &:hover img {
     transform: scale(1.1);
@@ -198,7 +198,7 @@ function toarticle(e) {
         height: 240px;
 
         .img {
-          height: 240px;
+          height: 100%;
           width: 100%;
           object-fit: cover;
         }
@@ -226,7 +226,7 @@ function toarticle(e) {
 
       .title {
         display: flex;
-        margin: 1.2vw 1.4vw;
+        margin: 1.2vh 1.4vw;
         font-weight: bold;
         font-size: 1.8rem;
         line-height: 1.4;
@@ -251,7 +251,7 @@ function toarticle(e) {
       }
 
       .main-p {
-        margin: 0.8vw 1vw;
+        margin: 0.2vh 2vh 1vw;
         font-size: 1.2rem;
         line-height: 1.6;
         display: -webkit-box;
@@ -261,7 +261,7 @@ function toarticle(e) {
       }
 
       .tag {
-        margin: 0.5vw 1vw;
+        margin: 0.5vh 2vh 1vw;
         font-size: 1.2rem;
         display: flex;
         align-items: center;
