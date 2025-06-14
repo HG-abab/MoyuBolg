@@ -1,5 +1,8 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import { useUserStore } from '../stores/User'
+
+const userStore = useUserStore()
 
 const request = axios.create({
   baseURL: 'http://114.215.186.193:3000/api' // 设置基础URL
@@ -8,6 +11,10 @@ const request = axios.create({
 // 请求拦截器
 request.interceptors.request.use(
   (config) => {
+    const token = userStore.token
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`
+    }
     return config
   },
   (error) => {

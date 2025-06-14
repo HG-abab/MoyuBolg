@@ -79,6 +79,9 @@
                 <el-button type="primary" plain size="small" @click="viewArticle(article.id)">
                   查看文章
                 </el-button>
+                <el-button type="success" plain size="small" @click="editArticle(article.id)">
+                  编辑文章
+                </el-button>
               </div>
             </div>
 
@@ -226,6 +229,10 @@ const viewFavorite = (id, type) => {
   }
 };
 
+// 编辑文章
+const editArticle = (id) => {
+  router.push(`/edit/${id}`);
+};
 
 const followUser = () => {
   window.open('http://114.215.186.193:8084', '_blank');
@@ -559,6 +566,14 @@ const createNewArticle = () => {
           justify-content: flex-end;
           gap: 10px;
           margin-top: auto;
+
+          .el-button {
+            transition: all 0.3s ease;
+
+            &:hover {
+              transform: translateY(-2px);
+            }
+          }
         }
       }
 

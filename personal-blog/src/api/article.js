@@ -38,3 +38,49 @@ export const getSearchHistory = (data) => request.post(`/article/search`, data)
 
 // 删除搜索记录
 export const deleteSearchHistory = (data) => request.delete(`/article/deleteSearchRecord`, {data})
+
+// 获取文章列表
+export function getArticleList(params) {
+  return request({
+    url: '/article/list',
+    method: 'get',
+    params
+  })
+}
+
+// 获取文章详情
+export function getArticle(id) {
+  return request({
+    url: `/article/${id}`,
+    method: 'get'
+  })
+}
+
+// 创建文章
+export function createArticle(data) {
+  return request({
+    url: '/article',
+    method: 'post',
+    data
+  })
+}
+
+// 更新文章
+export function updateArticle(id, data) {
+  return request({
+    url: `/article/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+// 删除文章
+export function deleteArticle(id) {
+  return request({
+    url: `/article/${id}`,
+    method: 'delete'
+  })
+}
+
+// 添加文章
+export const addArticle = (data) => request.post('/article/addActicle', data)

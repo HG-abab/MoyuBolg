@@ -84,6 +84,14 @@ const routes = [
         name: 'user',
         component: () => import('../view/user/Profile.vue'),
   },
+  {
+    path: '/edit/:id',
+    name: 'EditArticle',
+    component: () => import('@/view/edit/index.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
   // 重定向
   {
     path: '/:pathMatch(.*)*',
